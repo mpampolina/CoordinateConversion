@@ -7,12 +7,12 @@ falseEasting = 5e5      # location of the zone meridian, placed at an arbitrary 
 NorthQuadrants = ['N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X']
 SouthQuadrants = ['M', 'L', 'K', 'J', 'H', 'G', 'F', 'E', 'D', 'C']
 
-# Datums are ordered (a, b), which refer to the characteristics of an ellipse
+# Datums are ordered (a, b), which refer to the characteristics of an ellipsoid
 # a -> semi-major axis (distance from the vertex to center of an ellipse)
 # b -> semi-minor axis (distance from the co-vertex or "short-distance" vertex to the center of an ellipse)
 
 Datums = {
-    'WGS 84': (6378137.0, 6356752.314),
+    'WGS 84': (6378137, 6356752.3142),
     'NAD 83': (6378137, 6356752.3142),
     'GRS 80': (6378137, 6356752.3141),
     'WGS 72': (6378135, 6356750.5),
@@ -133,8 +133,8 @@ def LLfromUTM(Easting, Northing, zone, zoneQuadrant=None, North=None, datum='WGS
     relative_long_rad = atan(sinh(eta_prime) / cos(xi_prime))
     relative_long = degrees(relative_long_rad)  # longitude relative to central meridian
 
-    # We are in a pickle here. Since tau is unknown and sigma2 is a function of tau, we need to use an approximation
-    # for newton's method with a first guess for tau, say tau = tau_prime2. With each iteration, f converges closer and
+    # We are in a pickle here. Since tau is unknown and sigma is a function of tau, we need to use an approximation
+    # for newton's method with a first guess for tau, say tau = tau_prime. With each iteration, f converges closer and
     # closer to zero and tau stabilizes. f should converge after 2-3 iterations, but other programs have used 7.
     # Likewise, we will be using 7 iterations.
     # source: [https: // stevedutch.net / usefuldata / utmformulas.htm] analogous to (Karney 2010, pg.3, eqn. 19-21)
@@ -159,14 +159,15 @@ def LLfromUTM(Easting, Northing, zone, zoneQuadrant=None, North=None, datum='WGS
     return lat, long
 
 
-# Longitude range: -180 degrees < long < 180 degrees and is centered at 0 degrees
-# Utm has a zone system from 0 degrees moving right from the IDL and 360 degrees
-# moving right to the IDL. Each zone spans 6 degrees in width. To convert from
-# longitude to zone, we have to add 180 degrees to the longitude to get the degrees
-# right from the IDL. Then we then divide by 6 degrees to get the zone. Since utm
-# starts from zone 1 and each in between coordinates round down to the nearest zone
-# we add 1. If the longitude is greater than 0, we still divide by 180, but instead
-# add 31 (30/6 = 0 + 1 for the starting zone = 31)
+# Longitude range: -180 degrees <= long <= 180 degrees and is centered at the Greenwich
+# Meridian located at 0 degrees longitude. UTM has a zone system from 0 degrees moving
+# right from the IDL and 360 degrees moving right to the IDL. Each zone spans 6 degrees in
+# width. To convert from longitude to zone, we have to add 180 degrees to the longitude to
+# get the degrees right from the IDL. Then we then divide by 6 degrees to get the zone.
+# Since UTM starts from zone 1 and each in between coordinates round down to the nearest
+# zone we add 1. If the longitude is greater than 0 we still divide by 6, but instead
+# add 31 to account for starting at 180 degrees right of the IDL
+# (180/6 = 30 + 1 for the starting zone = 31)
 
 def getZone(longitude):
     if longitude < 0:
@@ -180,7 +181,7 @@ def getZone(longitude):
 
 # Get the location of a zone's central meridian in degrees longitude.
 # i.e. I'm in zone 31 (just east of the Greenwich Meridian).
-# The central meridian for my zone is 6 * 31 = 3 degrees longitude.
+# The central meridian for my zone is 6 * 31 - 183 = 3 degrees longitude.
 
 def getZoneCM(zone):
     return 6 * zone - 183
