@@ -18,7 +18,7 @@ def dxfParser(Path):
             coordinates = {'Easting': entry[1], 'Northing': entry[2], 'Elevation': entry[3]}
             coordinateList.append(coordinates)
 
-        with open('profile.csv', 'w', newline='') as csvFile:
+        with open('profileFromDXF.csv', 'w', newline='') as csvFile:
             fieldnames = ['Easting', 'Northing', 'Elevation']
             writer = csv.DictWriter(csvFile, fieldnames=fieldnames)
 

@@ -1,6 +1,7 @@
 from math import sqrt, sin, cos, tan, atan, cosh, sinh, asinh, atanh,  floor, degrees, radians
 from KruegerSeries import getAlphaSeries, getBetaSeries
 import csv
+import os
 
 # CONSTANTS
 k0 = 0.9996             # scale on central meridian
@@ -261,44 +262,64 @@ def getDMSfromLL(lat, long):
 # Give & get filename for the csv file that needs to be converted, the conversion direction, and desired datum
 def fileInput():
     print('utm2LL and LL2utm  Conversion Tool'.center(40, '='))
-    # print('\nTo start your conversion, please enter one of the following options:')
-    # print('\nOption-1: Please enter the path for your .csv file.')
-    print('''\nEnsure that the selected csv file is located in the same directory as this script and
-    please enter the filename for your .csv file (example: MyCoordinates.csv).\n ''')
+    print('\nTo start your conversion, please enter one of the following options:')
+    print('\nOption-1: Please enter the path for your .csv file.')
+    print('''Option-2: Ensure that the selected csv file is located in the same directory as this script and
+    please enter the filename for your .csv file (example: MyCoordinates.csv).\n''')
     filename = input('Input: ')
     print('\nSelect the conversion direction:\n Lat/lon to UTM input -> LL2utm \n UTM to lat/lon input -> utm2LL')
     convDir = str(input('Input: '))
-    print('\nInput the datum you would like to exectue the conversion in (i.e. NAD 83, WGS 84 etc.:\n')
+    print('\nWhat datum you would like to exectue the conversion in (i.e. NAD 83, WGS 84 etc.:')
     datum_in = input('Input: ')
     return filename, convDir, datum_in
 
-# Convert a CSV file of UTM coordinates to latitude and longitude
+# Convert a CSV file of latitud enad longitude coordinates to UTM
 def batch_LL2utm(filename, datum_in):
     # Open Lat/lon file and copy it as reader
     with open(filename) as f:
+        # Open Lat/lon file and copy it as reader
         reader = csv.reader(f, delimiter=',')
+        line_count = 0
         with open('LatLon2Utm_out.csv', 'w', newline='') as csvFile:
             # Write headers for the utm selections
             writer = csv.writer(csvFile)
             writer.writerow(['Easting', 'Northing', 'Zone', 'Zone Quadrant'],)
             for coords in (reader):
-                # Record the lat/lon values in as floats and use these in the LL2utm method 
-                lat_in = float(coords[0])
-                lon_in = float(coords[1])
-                east_out, north_out, zone, zone_quad = LL2utm(lat_in, lon_in, datum= datum_in)
-                writer.writerow([east_out, north_out, zone, zone_quad])
+                if line_count == 0:
+                    line_count +=1
+                else:
+                    # Record the lat/lon values in as floats and use these in the LL2utm method 
+                    lat_in = float(coords[0])
+                    lon_in = float(coords[1])
+                    east_out, north_out, zone, zone_quad = LL2utm(lat_in, lon_in, datum= datum_in)
+                    writer.writerow([east_out, north_out, zone, zone_quad])
+                    line_count +=1
+    print(f'Converted {line_count} coordinates')
 
-# def batch_utm2LL(filename, datum_in):
-    # with open(filename) as f:
-    #         reader = csv.reader(f, delimiter=',')
-    #         with open('utm2LL_out.csv', 'w', newline='') as csvFile:
-    #             writer = csv.writer(csvFile)
-    #             writer.writerow(['Latitude', 'Longitude'],)
-    #             for coords in (reader):
-    #                 lat_in = float(coords[0])
-    #                 lon_in = float(coords[1])
-    #                 lat_out, lon_out, zone, zone_quad = utm2LL(lat_in, lon_in, datum= datum_in)
-    #                 writer.writerow([lat_out, lon_out, zone, zone_quad])
+
+# Convert a CSV file of UTM coordinates to latitude and longitude
+def batch_utm2LL(filename, datum_in, zone, zoneQuad, is_north):
+    with open(filename) as f:
+        # Open the UTM file. Should be found from the dxf_to_csv parser
+        reader = csv.reader(f, delimiter=',')
+        line_count = 0
+        with open('utm2LL_out.csv', 'w', newline='') as csvFile:
+            # Write the Lat, lon headers in our new file
+            writer = csv.writer(csvFile)
+            writer.writerow(['Latitude', 'Longitude'],)
+            for coords in (reader):
+                # Parse through all the rows of in the UTM coordinate file
+                if line_count == 0:
+                    # Check if we are at the labelling row
+                    line_count +=1
+                else:
+                    # For coordinate rows, record UTM values as floats and use them for the utm2LL method
+                    east_in = float(coords[0])
+                    north_in = float(coords[1])
+                    lat_out, lon_out = utm2LL(east_in, north_in, zone, zoneQuadrant= zoneQuad, North=is_north, datum= datum_in)
+                    writer.writerow([lat_out, lon_out])
+                    line_count +=1
+    print(f'Converted {line_count} coordinates')
 
 if __name__ == "__main__":
 
@@ -307,24 +328,36 @@ if __name__ == "__main__":
     # of a millimeter of the true easting values and within 2 millimeters of the true northing values. This
     # implementation also has a tendency to underestimate by 1 millimeter on the Northing side, likely due to
     # accruing a significant amount of floating point error over the course of the calculations.
+    test = False
+    if test == True:
+        Latitude, Longitude = getLLfromDMS(49, 6, 57.31599, -119, 40, 33.63357)
+        print(f"Kobau 1 Latitude, Longitude - {Latitude, Longitude}")
+        print(f"Kobau 1 conversion to UTM (Easting, Northing) - {LL2utm(Latitude, Longitude, datum='WGS 84')}")
+        print(f"Kobau 1 true values (Easting, Northing) - (304734.658, 5443790.965)")
+        print(f"Kobau 1 conversion to UTM and back {utm2LL(*LL2utm(Latitude, Longitude, datum='WGS 84'))}")
 
-    Latitude, Longitude = getLLfromDMS(49, 6, 57.31599, -119, 40, 33.63357)
-    print(f"Kobau 1 Latitude, Longitude - {Latitude, Longitude}")
-    print(f"Kobau 1 conversion to UTM (Easting, Northing) - {LL2utm(Latitude, Longitude, datum='WGS 84')}")
-    print(f"Kobau 1 true values (Easting, Northing) - (304734.658, 5443790.965)")
-    print(f"Kobau 1 conversion to UTM and back {utm2LL(*LL2utm(Latitude, Longitude, datum='WGS 84'))}")
+        print("\n")
 
-    print("\n")
-
-    Latitude, Longitude = getLLfromDMS(49, 6, 50.67477, -119, 40, 24.04625)
-    print(f"Kobau 2 Latitude, Longitude - {Latitude, Longitude}")
-    print(f"Kobau 2 conversion to UTM (Easting, Northing) - {LL2utm(Latitude, Longitude, datum='WGS 84')}")
-    print(f"Kobau 1 true values (Easting, Northing) - (304921.726, 5443579.054)")
-    print(f"Kobau 2 conversion to UTM and back {utm2LL(*LL2utm(Latitude, Longitude, datum='WGS 84'))}")
-
+        Latitude, Longitude = getLLfromDMS(49, 6, 50.67477, -119, 40, 24.04625)
+        print(f"Kobau 2 Latitude, Longitude - {Latitude, Longitude}")
+        print(f"Kobau 2 conversion to UTM (Easting, Northing) - {LL2utm(Latitude, Longitude, datum='WGS 84')}")
+        print(f"Kobau 1 true values (Easting, Northing) - (304921.726, 5443579.054)")
+        print(f"Kobau 2 conversion to UTM and back {utm2LL(*LL2utm(Latitude, Longitude, datum='WGS 84'))}")
+    
+    # Record the filename or path input, the conversion direction, and the datum used
     filename, convDir, datum_in = fileInput()
     
+    # Determine which batch conversion to use
     if convDir =='LL2utm':
         batch_LL2utm(filename, datum_in)
-    # elif convDir == 'utm2LL':
-        # Work on the batch utm2LL conversion
+    elif convDir == 'utm2LL':
+        print('What zone are the sets of UTM coordinates in: ')
+        zone = int(input('Input: '))
+        print('\nWhat zone quadrant are the sets of UTM coordinates in? (ex. U) ')
+        zoneQuad = str(input('Input: '))
+        print('\nAre the sets of UTM coordaintes in the northern or southern hemisphere: Enter True for Northern and False for Southern')
+        is_north = bool(input('Input: '))
+        batch_utm2LL(filename, datum_in, zone, zoneQuad, is_north)
+    
+    scriptDirectory = os.getcwd()
+    print(f'Conversion Complete. Please check [{scriptDirectory}] for the converted file.')

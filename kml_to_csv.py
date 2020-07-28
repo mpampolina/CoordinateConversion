@@ -17,7 +17,7 @@ def kmlParser(Path):
     # Make sure "profile.kml" or whatever the file is called is in the same directory
     with open(Path, 'r') as f:
         s = BeautifulSoup(f, 'lxml')
-        with open('profile.csv', 'w', newline='') as csvFile:
+        with open('profileFromKML.csv', 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
 
             # add header
