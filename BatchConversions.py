@@ -54,7 +54,7 @@ def batch_LLdms2utm(filename, datum_in):
 # Convert a CSV file of UTM coordinates to latitude and longitude
 def batch_utm2LL(filename, datum_in, zone, zoneQuadrant, is_north):
     with open(filename) as f:                                           # Open the UTM file from the dxf_to_csv parser
-        reader = csv.reader(f, delimiter=',')
+        reader = csv.reader(f, delimiter=',')                           # Generate a reader object from file
         with open('utm_to_LL_out.csv', 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(['Latitude', 'Longitude'],)                 # Write headers for the writer object
@@ -101,3 +101,4 @@ if __name__ == "__main__":
 
     print("Press Enter to continue ...")
     input()
+   
