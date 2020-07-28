@@ -1,11 +1,13 @@
 /.idea
 /venv
 /__pycache__
+/releases
+/originals
 profileFromDXF.csv
 profileFromKML.csv
 profile.kml
 profile.dxf
-LatLon2Utm_out-original.csv
+LL2utm_out-original.csv
 LatLon2Utm_out.csv
 utm2LL_out-original.csv
 utm2LL_out.csv

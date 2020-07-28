@@ -267,11 +267,11 @@ def fileInput():
     print('\nOption-1: Please enter the path for your .csv file.')
     print('''Option-2: Ensure that the selected csv file is located in the same directory as this script and 
 please enter the filename for your .csv file (example: MyCoordinates.csv).\n''')
-    filename = input('Input: ')
+    filename = input('Input:')
     print('\nSelect the conversion direction:\n Lat/lon to UTM input -> LL2utm \n UTM to lat/lon input -> utm2LL')
     conversionDirection = str(input('Input: '))
     print('\nWhat datum you would like to reference the conversion with (i.e. NAD 83, WGS 84 etc.:')
-    datum_in = input('Input: ')
+    datum_in = input('Input:')
     return filename, conversionDirection, datum_in
 
 
@@ -279,7 +279,7 @@ please enter the filename for your .csv file (example: MyCoordinates.csv).\n''')
 def batch_LL2utm(filename, datum_in):
     with open(filename) as f:                                                   # Open Latitude/Longitude file
         reader = csv.reader(f, delimiter=',')                                   # Generate a reader object from file
-        with open('LatLon2Utm_out.csv', 'w', newline='') as csvFile:
+        with open('LL2utm_out.csv', 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(['Easting', 'Northing', 'Zone', 'Zone Quadrant'],)  # Write headers for the writer object
             next(reader)                                                        # Skip the reader object header
@@ -343,12 +343,12 @@ if __name__ == "__main__":
         batch_LL2utm(Filename, datum_input)
     elif convDir == 'utm2LL':
         print('What zone are the sets of UTM coordinates in: ')
-        Zone = int(input('Input: '))
+        Zone = int(input('Input:'))
         print('\nWhat zone quadrant are the sets of UTM coordinates in? (ex. U) ')
-        zoneQuad = str(input('Input: '))
+        zoneQuad = str(input('Input:'))
         print('''\nAre the sets of UTM coordinates in the northern or southern hemisphere: Enter True for Northern 
         and False for Southern''')
-        isNorth = bool(input('Input: '))
+        isNorth = bool(input('Input:'))
         batch_utm2LL(Filename, datum_input, Zone, zoneQuad, isNorth)
     
     scriptDirectory = os.getcwd()
