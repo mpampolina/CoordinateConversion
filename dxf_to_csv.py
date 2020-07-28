@@ -6,7 +6,8 @@ utmRegex = re.compile(r'''(AcDbPoint\n\s10\n(\d+\.\d+)\n\s20\n(\d+\.\d+)\n\s30\n
 ''', re.VERBOSE)
 
 
-def dxfParser(Path):
+def dxfParser(Path, Filename):
+    outputFilename = Filename + '_dxf_converted.csv'
     with open(Path, 'r') as myfile:
         data = myfile.read()    # reads in dxf.txt file and returns the data in string form
 
@@ -18,7 +19,7 @@ def dxfParser(Path):
             coordinates = {'Easting': entry[1], 'Northing': entry[2], 'Elevation': entry[3]}
             coordinateList.append(coordinates)
 
-        with open('profileFromDXF.csv', 'w', newline='') as csvFile:
+        with open(outputFilename, 'w', newline='') as csvFile:
             fieldnames = ['Easting', 'Northing', 'Elevation']
             writer = csv.DictWriter(csvFile, fieldnames=fieldnames)
 
@@ -39,10 +40,15 @@ def pathInput():
     print('\nOption-1: Please enter the path for your .dxf file.')
     print('''\nOption-2: Ensure that the selected DXF file is located in the same directory as this script and
 please enter the filename for your .dxf file.\n''')
-    Path = input('Input: ')
-    return Path
+    Path = input('Input:')
+    while not os.path.isfile(Path):
+        print('Your selected path either does not exist or is not a file. Please try again.')
+        Path = input('Input:')
+    Filename = os.path.basename(Path)
+    Filename = Filename.split('.')[0]
+    return Path, Filename
 
 
 if __name__ == "__main__":
-    path = pathInput()
-    dxfParser(path)
+    path, filename = pathInput()
+    dxfParser(path, filename)

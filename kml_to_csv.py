@@ -12,12 +12,13 @@ def process_coordinate_string(string):
     return [comma_split[1], comma_split[0], comma_split[2]]     # return (lat, long, elevation)
 
 
-def kmlParser(Path):
+def kmlParser(Path, Filename):
     # Open the KML. Read the KML. Open a CSV file. Process a coordinate string to be a CSV row.
     # Make sure "profile.kml" or whatever the file is called is in the same directory
+    outputFilename = Filename + '_kml_converted.csv'
     with open(Path, 'r') as f:
         s = BeautifulSoup(f, 'lxml')
-        with open('profileFromKML.csv', 'w', newline='') as csvFile:
+        with open(outputFilename, 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
 
             # add header
@@ -38,11 +39,15 @@ def pathInput():
     print('\nOption-1: Please enter the path for your .kml file.')
     print('''\nOption-2: Ensure that the selected KML file is located in the same directory as this script and
 please enter the filename for your .kml file.\n''')
-    Path = input('Input: ')
-    return Path
+    Path = input('Input:')
+    while not os.path.isfile(Path):
+        print('Your selected path either does not exist or is not a file. Please try again.')
+        Path = input('Input:')
+    Filename = os.path.basename(Path)
+    Filename = Filename.split('.')[0]
+    return Path, Filename
 
 
-# Run the main method
 if __name__ == "__main__":
-    path = pathInput()
-    kmlParser(path)
+    path, filename = pathInput()
+    kmlParser(path, filename)
