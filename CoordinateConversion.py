@@ -259,6 +259,7 @@ def getDMSfromLL(lat, long):
     long_sec = 3600 * (abs(long) - abs(long_deg) - (long_min/60))
     return (lat_deg, lat_min, lat_sec), (long_deg, long_min, long_sec)
 
+
 if __name__ == "__main__":
 
     # Kobau 1 and 2 refer to geodetic control monuments with known Latitude and Longitude + UTM values
@@ -282,6 +283,3 @@ if __name__ == "__main__":
         print(f"Kobau 2 conversion to UTM (Easting, Northing) - {LL2utm(Latitude, Longitude, datum='WGS 84')}")
         print(f"Kobau 1 true values (Easting, Northing) - (304921.726, 5443579.054)")
         print(f"Kobau 2 conversion to UTM and back {utm2LL(*LL2utm(Latitude, Longitude, datum='WGS 84'))}")
-   
-    print("Press Enter to continue ...")
-    input()
