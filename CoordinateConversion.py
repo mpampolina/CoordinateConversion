@@ -1,5 +1,6 @@
 from math import sqrt, sin, cos, tan, atan, cosh, sinh, asinh, atanh,  floor, degrees, radians
 from KruegerSeries import getAlphaSeries, getBetaSeries
+import csv
 
 # CONSTANTS
 k0 = 0.9996             # scale on central meridian
@@ -257,6 +258,45 @@ def getDMSfromLL(lat, long):
     long_sec = 3600 * (abs(long) - abs(long_deg) - (long_min/60))
     return (lat_deg, lat_min, lat_sec), (long_deg, long_min, long_sec)
 
+# Give & get path for the csv file that needs to be converted
+def fileInput():
+    print('utm2LL and LL2utm  Conversion Tool'.center(40, '='))
+    # print('\nTo start your conversion, please enter one of the following options:')
+    # print('\nOption-1: Please enter the path for your .csv file.')
+    print('''\nEnsure that the selected csv file is located in the same directory as this script and
+    please enter the filename for your .csv file (example: MyCoordinates.csv).\n ''')
+    filename = input('Input: ')
+    print('\nSelect the conversion direction you would like for LatLon to utm enter 1, for utm to LatLon enter 2\n')
+    convDir = int(input('Input: '))
+    print('\nInput the datum you would like to exectue the conversion in (i.e. NAD 83, WGS 84 etc.:\n')
+    datum_in = input('Input: ')
+    return filename, convDir, datum_in
+
+# Convert a CSV file of UTM coordinates to latitude and longitude
+def batch_LL2utm(filename, datum_in):
+    #
+    with open(filename) as f:
+        reader = csv.reader(f, delimiter=',')
+        with open('LatLon2Utm_out.csv', 'w', newline='') as csvFile:
+            writer = csv.writer(csvFile)
+            writer.writerow(['Easting', 'Northing', 'Zone', 'Zone Quadrant'],)
+            for coords in (reader):
+                lat_in = float(coords[0])
+                lon_in = float(coords[1])
+                east_out, north_out, zone, zone_quad = UTMfromLL(lat_in, lon_in, datum= datum_in)
+                writer.writerow([east_out, north_out, zone, zone_quad])
+
+# def batch_utm2LL(filename, datum_in):
+    # with open(filename) as f:
+    #         reader = csv.reader(f, delimiter=',')
+    #         with open('utm2LL_out.csv', 'w', newline='') as csvFile:
+    #             writer = csv.writer(csvFile)
+    #             writer.writerow(['Latitude', 'Longitude'],)
+    #             for coords in (reader):
+    #                 lat_in = float(coords[0])
+    #                 lon_in = float(coords[1])
+    #                 lat_out, lon_out, zone, zone_quad = LLfromUTM(lat_in, lon_in, datum= datum_in)
+    #                 writer.writerow([lat_out, lon_out, zone, zone_quad])
 
 if __name__ == "__main__":
 
@@ -279,3 +319,12 @@ if __name__ == "__main__":
     print(f"Kobau 2 conversion to UTM (Easting, Northing) - {UTMfromLL(Latitude, Longitude, datum='WGS 84')}")
     print(f"Kobau 1 true values (Easting, Northing) - (304921.726, 5443579.054)")
     print(f"Kobau 2 conversion to UTM and back {LLfromUTM(*UTMfromLL(Latitude, Longitude, datum='WGS 84'))}")
+
+    filename, convDir, datum_in = fileInput()
+    
+    if convDir == 1:
+        print(filename); print(convDir); print(datum_in)
+        batch_LL2utm(filename, datum_in)
+    elif convDir == 2:
+        print(filename); print(convDir); print(datum_in)
+        # batch_utm2LL(filename, datum_in)
