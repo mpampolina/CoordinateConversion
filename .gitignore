@@ -1,5 +1,11 @@
 /.idea
 /venv
-profile.csv
+/__pycache__
+profileFromDXF.csv
+profileFromKML.csv
 profile.kml
 profile.dxf
+LatLon2Utm_out-original.csv
+LatLon2Utm_out.csv
+utm2LL_out-original.csv
+utm2LL_out.csv
