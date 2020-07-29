@@ -8,15 +8,15 @@ WGS 84, NAD83, GRS 80, WGS 72, Australian 1965, Krasovsky 1940, North American 1
 ### Input Files
 ------
 All input files must be .csv format. The three options for file input are as follows:
-1. Lat/Lon (decimal degrees) must occupy the first two columns of your csv file **in that order**
+1. Lat/Lon (decimal degrees) must occupy the first two columns of your csv file **in that order**.
 2. Lat/Lon (degrees, minutes, seconds) must occupy the first six columns of your csv file. The order for this must be latitude (deg, min, sec) in cols 1,2,3 respectively while longitude follows as (deg, min, sec) in cols 4, 5, and 6. Entries must be **in that order**.
-3. UTM (easting, northing) must occupy the first two columns of your csv file **in that order**
+3. UTM (easting, northing) must occupy the first two columns of your csv file **in that order**.
 
 **The first set of coordinates should appear on the 2nd row (the system ignores column headers).**
 
 ### Available Conversions
 ------
-Currently, there are three available conversion directions
+Currently, there are three available conversion directions:
 
 ### Latitude/Longitude(decimal degrees) to UTM:
 To execute this you must input a Lat/Lon(decimal degrees) file. The necessary format is noted in “Input Files Section 1”. With this you will be asked for the path and datum. The conversion will produce your output file in the same directory as the batchConversion.py file.
@@ -24,15 +24,15 @@ To execute this you must input a Lat/Lon(decimal degrees) file. The necessary fo
 ### Latitude/Longitude(degrees, minutes, seconds) to UTM:
 To execute this you must input a Lat/Lon(deg,min,sec) file. The necessary format is noted in “Input Files Section 2”. With this you will be asked for the file path and datum used. The conversion will produce your output file in the same directory as the batchConversion.py file.
 
-### UTM to Latitude/Longitude(degrees):
+### UTM to Latitude/Longitude(decimal degrees):
 To execute this you need to input a UTM file. The necessary format is noted in “Input Files Section 3”. Here you will need the file path, zone, either the zone quadrant or the hemisphere of your coordinates, and the datum used. The conversion will produce your output file in the same directory as the batchConversion.py file.
 
 ### Errors:
 ------
 The error of the conversion seems to be quite accurate. 
-* Going from Lat/Lon to UTM (profile.kml converted to profile.csv) the average error for the 55 coordinates was roughly 1 micrometre for easting and 0.1mm for northing
-* Going from UTM to Lat/Lon (profile.dxf converted to profile.csv) the average error for the 54 coordinates was roughly 1 nanometre for latitude, zero for longitude
+* Going from Lat/Lon to UTM (profile.kml converted to profile.csv) the average error for the 55 coordinates was roughly 1 micrometre for easting and 0.1mm for northing.
+* Going from UTM to Lat/Lon (profile.dxf converted to profile.csv) the average error for the 54 coordinates was roughly 1 nanometre for latitude, zero for longitude.
 
 Geodetic control monuments with known Latitude and Longitude + UTM values were also compared against the system:
-* Going from Lat/Lon (deg,min,sec) to UTM the average error for the 9 coordinates was roughly 0.2mm for Easting and 0.4mm for Northing
+* Going from Lat/Lon (deg,min,sec) to UTM the average error for the 9 coordinates was roughly 0.2mm for Easting and 0.4mm for Northing.
 * For greater detail in the errors see the [Conversion Errors Google sheet](https://docs.google.com/spreadsheets/d/1ji0FxSZ786cPkNk0wIezwoCyrZBmFLjxTOtS8qBjaK8/edit?usp=sharing, "CoordinateConversion.py").
