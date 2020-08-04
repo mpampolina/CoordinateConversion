@@ -1,4 +1,4 @@
-from math import sqrt, sin, cos, tan, atan, cosh, sinh, asinh, atanh,  floor, degrees, radians
+from math import sqrt, sin, cos, tan, atan, cosh, sinh, asinh, atanh, atan2, floor, degrees, radians
 from KruegerSeries import getAlphaSeries, getBetaSeries
 import csv
 import os
@@ -258,6 +258,34 @@ def getDMSfromLL(lat, long):
     long_min = round(floor((60 * (abs(long) - abs(long_deg)))))
     long_sec = 3600 * (abs(long) - abs(long_deg) - (long_min/60))
     return (lat_deg, lat_min, lat_sec), (long_deg, long_min, long_sec)
+
+
+# Calculates the distance between two latitude and longitude points in km units.
+def distanceBetweenLL(lat1, lon1, lat2, lon2):
+    R = 6371  # mean radius of earth in km
+
+    Sig1 = radians(lat1)
+    Sig2 = radians(lat2)
+    DeltaSig = radians(lat2 - lat1)
+    DeltaLamb = radians(lon2 - lon1)
+
+    a = (sin(DeltaSig / 2) ** 2) + cos(Sig1) * cos(Sig2) * (sin(DeltaLamb / 2) ** 2)
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    d = R * c
+
+    return d
+
+
+# Calculates the distance between two easting and northing (UTM) points in km units.
+# Note: this calculation will likely not work for fringe cases such as points near the
+# equator.
+def distanceBetweenUTM(easting1, northing1, easting2, northing2):
+    DeltaX = easting2 - easting1
+    DeltaY = northing2 - northing1
+
+    d = sqrt((DeltaX ** 2) + (DeltaY ** 2)) * 0.001
+
+    return d
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-from CoordinateConversion import LL2utm, utm2LL, getLLfromDMS
+from CoordinateConversion import LL2utm, utm2LL, getLLfromDMS, distanceBetweenLL, distanceBetweenUTM
 import csv
 import os
 
@@ -23,33 +23,46 @@ please enter the filename for your .csv file (example: MyCoordinates.csv).\n''')
 def batch_LL2utm(filename, datum_in):
     with open(filename) as f:                                                   # Open Latitude/Longitude file
         reader = csv.reader(f, delimiter=',')                                   # Generate a reader object from file
-        with open('LL_to_Utm_out.csv', 'w', newline='') as csvFile:
+        with open('LL2utm_out.csv', 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(['Latitude', 'Longitude', 'Easting', 'Northing', 'Zone', 'Zone Quadrant'],)  # Write header
-            next(reader)                                                        # Skip the reader object header
-            for lineCount, coords in enumerate(reader, start=1):
-                # Record the lat/lon values in as floats and use these in the LL2utm method
-                lat_in = float(coords[0])
-                lon_in = float(coords[1])
-                east_out, north_out, zone, zone_quad = LL2utm(lat_in, lon_in, datum=datum_in)
-                writer.writerow([lat_in, lon_in, east_out, north_out, zone, zone_quad])
+            next(reader)                                                                # Skip the reader object header
+
+            readerList = list(reader)
+            distance = 0
+            for lineCount, coords in enumerate(readerList, start=1):
+                lat_in1 = float(coords[0])
+                lon_in1 = float(coords[1])
+                east_out, north_out, zone, zone_quad = LL2utm(lat_in1, lon_in1, datum=datum_in)
+
+                if lineCount < len(readerList):
+                    lat_in2 = float(readerList[lineCount][0])   # next latitude
+                    lon_in2 = float(readerList[lineCount][1])   # next longitude
+                    distance += distanceBetweenLL(lat_in1, lon_in1, lat_in2, lon_in2)
+
+                writer.writerow([lat_in1, lon_in1, east_out, north_out, zone, zone_quad])
+
+            writer.writerow(['TotalDistance(km)', distance])
     print(f'\nConverted {lineCount} coordinates')
+    print(f'\nTotal polyline distance travelled: {distance}km')
 
 
-# Convert CSV file of latitude longitude coordinates in Deg,min,sec to UTM
-def batch_LLdms2utm(filename, datum_in):
+# Convert CSV file of latitude longitude coordinates in deg,min,sec (dms) notation to UTM
+def batch_dms2utm(filename, datum_in):
     with open(filename) as f:                                                   # Open Latitude/Longitude file
         reader = csv.reader(f, delimiter=',')                                   # Generate a reader object from file
-        with open('LLdms_to_Utm_out.csv', 'w', newline='') as csvFile:
+        with open('dms2utm_out.csv', 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(['Latitude', 'Longitude', 'Easting', 'Northing', 'Zone', 'Zone Quadrant'],)  # Write header
-            next(reader)                                                        # Skip the reader object header
+            next(reader)                                                                # Skip the reader object header
+
             for lineCount, coords in enumerate(reader, start=1):
-                # Parse through all the rows of in the LatLon coordinate file
-                # Collect the DMS values and convert to degrees (lat,lon) for each row
+
                 lat_in, lon_in = getLLfromDMS(float(coords[0]), float(coords[1]), float(coords[2]), float(coords[3]),
                                               float(coords[4]), float(coords[5]))
+
                 east_out, north_out, zone, zone_quad = LL2utm(lat_in, lon_in, datum=datum_in)
+
                 writer.writerow([lat_in, lon_in, east_out, north_out, zone, zone_quad])
     print(f'\nConverted {lineCount} coordinates') 
 
@@ -58,19 +71,29 @@ def batch_LLdms2utm(filename, datum_in):
 def batch_utm2LL(filename, datum_in, zone, zoneQuadrant, is_north):
     with open(filename) as f:                                           # Open the UTM file from the dxf_to_csv parser
         reader = csv.reader(f, delimiter=',')                           # Generate a reader object from file
-        with open('utm_to_LL_out.csv', 'w', newline='') as csvFile:
+        with open('utm2LL_out.csv', 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(['Latitude', 'Longitude'],)                 # Write headers for the writer object
             next(reader)                                                # Skip the reader object header
-            for lineCount, coords in enumerate(reader, start=1):
-                # Parse through all the rows of in the UTM coordinate file
-                # For coordinate rows, record UTM values as floats and use them for the utm2LL method
-                east_in = float(coords[0])
-                north_in = float(coords[1])
-                lat_out, lon_out = utm2LL(east_in, north_in, zone, zoneQuadrant=zoneQuadrant, North=is_north,
+
+            readerList = list(reader)
+            distance = 0
+            for lineCount, coords in enumerate(readerList, start=1):
+                east_in1 = float(coords[0])
+                north_in1 = float(coords[1])
+                lat_out, lon_out = utm2LL(east_in1, north_in1, zone, zoneQuadrant=zoneQuadrant, North=is_north,
                                           datum=datum_in)
+
+                if lineCount < len(readerList):
+                    east_in2 = float(readerList[lineCount][0])      # next easting
+                    north_in2 = float(readerList[lineCount][1])     # next northing
+                    distance += distanceBetweenUTM(east_in1, north_in1, east_in2, north_in2)
+
                 writer.writerow([lat_out, lon_out])
+
+            writer.writerow(['TotalDistance(km)', distance])
     print(f'\nConverted {lineCount} coordinates')
+    print(f'\nTotal polyline distance travelled: {distance}km')
 
 
 # main    
@@ -94,7 +117,7 @@ and False for Southern''')
         batch_utm2LL(Filename, datum_input, Zone, zoneQuad, isNorth)
         conv_complete = True
     elif convDir == 'LLdms2utm':
-        batch_LLdms2utm(Filename, datum_input)
+        batch_dms2utm(Filename, datum_input)
         conv_complete = True
     else:
         print('No valid conversion direction chosen please re-run the script\n')
