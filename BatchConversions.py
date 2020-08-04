@@ -1,7 +1,6 @@
 from CoordinateConversion import LL2utm, utm2LL, getLLfromDMS, distanceBetweenLL, distanceBetweenUTM
 import csv
 import os
-import sys
 
 
 # Give & get filename for the csv file that needs to be converted, the conversion direction, and desired datum
