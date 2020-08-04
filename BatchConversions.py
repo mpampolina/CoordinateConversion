@@ -19,7 +19,6 @@ def mainMenu():
     datum_input = input('Input: ')
 
     conv_dir = get_ConversionDirection()
-    
     conv_complete = False
     while not conv_complete:
 
@@ -31,14 +30,12 @@ def mainMenu():
             
             print('What zone are the sets of UTM coordinates in: ')
             Zone = int(input('Input: '))
-            
             print('What zone quadrant are the sets of UTM coordinates in? (ex. U) ')
             zoneQuad = str(input('Input: '))
-
             print('''Are the sets of UTM coordinates in the northern or southern hemisphere: Enter True for Northern 
     and False for Southern''')
             isNorth = bool(input('Input: '))
-
+            
             batch_utm2LL(filename, datum_input, Zone, zoneQuad, isNorth)
             conv_complete = True
 
