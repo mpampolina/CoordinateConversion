@@ -21,11 +21,11 @@ def mainMenu():
     conv_complete = False
     while not conv_complete:
 
-        if conv_dir == 'LL2utm':
+        if conv_dir.casefold == 'LL2utm':
             batch_LL2utm(filename, datum_input)
             conv_complete = True
 
-        elif conv_dir == 'utm2LL':
+        elif conv_dir.casefold == 'utm2LL':
             
             print('What zone are the sets of UTM coordinates in: ')
             Zone = int(input('Input: '))
@@ -38,7 +38,7 @@ def mainMenu():
             batch_utm2LL(filename, datum_input, Zone, zoneQuad, isNorth)
             conv_complete = True
 
-        elif conv_dir == 'LLdms2utm':
+        elif conv_dir.casefold == 'LLdms2utm':
             batch_dms2utm(filename, datum_input)
             conv_complete = True
 
