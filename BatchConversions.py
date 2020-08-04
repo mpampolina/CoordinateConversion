@@ -7,37 +7,31 @@ import sys
 # Give & get filename for the csv file that needs to be converted, the conversion direction, and desired datum
 def mainMenu():
     print('utm2LL and LL2utm  Conversion Tool'.center(40, '='))
-    print('\nTo start your conversion, please enter one of the following options:')
-    print('\nOption-1: Please enter the path for your .csv file.')
-    print('''Option-2: Ensure that the selected csv file is located in the same directory as this script and 
-please enter the filename for your .csv file (example: MyCoordinates.csv).\n''')
-
-    filename = input('Input: ')
-
-
+    
+    filename = get_file()
     while not os.path.isfile(filename):
-        print('''\nThe file/path you entered does not exist. Please re-enter your desired file or path. If you would like to exit enter "quit" ''')
-        filename = input('Input: ')
+        print('This path or file does not exist')
+        filename = get_file()
         if filename == 'quit':
             os._exit(1)
 
-    print('\nWhat datum you would like to reference the conversion with (i.e. NAD 83, WGS 84 etc.:')
+    print('\nWhat datum you would like to reference the conversion with (i.e. NAD 83, WGS 84 etc.:\n')
     datum_input = input('Input: ')
-    
-    print('''\nSelect the conversion direction:\n1. Lat/lon to UTM input -> LL2utm 
-2. UTM to lat/lon input -> utm2LL\n3. Lat/Lon (DMS) to UTM input -> LLdms2utm\n''')
-    conversionDirection = str(input('Input: '))
+
+    conv_dir = get_ConversionDirection()
     
     conv_complete = False
     while not conv_complete:
-        if conversionDirection == 'LL2utm':
+
+        if conv_dir == 'LL2utm':
             batch_LL2utm(filename, datum_input)
             conv_complete = True
 
-        elif conversionDirection == 'utm2LL':
+        elif conv_dir == 'utm2LL':
+            
             print('What zone are the sets of UTM coordinates in: ')
             Zone = int(input('Input: '))
-
+            
             print('What zone quadrant are the sets of UTM coordinates in? (ex. U) ')
             zoneQuad = str(input('Input: '))
 
@@ -48,24 +42,38 @@ please enter the filename for your .csv file (example: MyCoordinates.csv).\n''')
             batch_utm2LL(filename, datum_input, Zone, zoneQuad, isNorth)
             conv_complete = True
 
-        elif conversionDirection == 'LLdms2utm':
+        elif conv_dir == 'LLdms2utm':
             batch_dms2utm(filename, datum_input)
             conv_complete = True
 
         else:
-            print('''\nNo valid conversion direction chosen please re-enter your desired direction. If you would like to terminate enter "quit" \n''')
-            conversionDirection = str(input('Input: '))
-            if conversionDirection == 'quit':
+            print('\nNo valid conversion direction chosen please re-enter your desired direction. If you would like to terminate enter "quit" \n')
+            conv_dir = get_ConversionDirection()
+            if conv_dir == 'quit':
                 os._exit(1)
-            conv_complete = False
 
-    if conv_complete:
-        scriptDirectory = os.getcwd()
-        print(f'Conversion Complete. Please check [{scriptDirectory}] for the converted file.')
-
+    scriptDirectory = os.getcwd()
+    print(f'Conversion Complete. Please check [{scriptDirectory}] for the converted file.')
     print("Press Enter to continue ...")
     input()
 
+
+# Method returns the filename or file path both of which are suitable
+def get_file():
+    print('\nPlease enter one of the following options to complete your coordinate conversion:')
+    print('\nOption-1: Please enter the path for your .csv file.')
+    print('''Option-2: Ensure that the selected csv file is located in the same directory as this script and 
+please enter the filename for your .csv file (example: MyCoordinates.csv).\n''')
+    filename = str(input('Input: '))
+    return filename
+
+
+# Method returns the conversion direction as a string 
+def get_ConversionDirection():
+    print('''Select the conversion direction:\n1. Lat/lon to UTM input -> LL2utm 
+2. UTM to lat/lon input -> utm2LL\n3. Lat/Lon (DMS) to UTM input -> LLdms2utm\n''')
+    conv_dir = str(input('Input: '))
+    return conv_dir
 
 # Convert a CSV file of latitude and longitude coordinates to UTM
 def batch_LL2utm(filename, datum_in):
