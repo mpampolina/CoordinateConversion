@@ -1,6 +1,7 @@
 from CoordinateConversion import LL2utm, utm2LL, getLLfromDMS, distanceBetweenLL, distanceBetweenUTM
 import csv
 import os
+import sys
 
 
 # Give & get filename for the csv file that needs to be converted, the conversion direction, and desired datum
@@ -13,40 +14,50 @@ please enter the filename for your .csv file (example: MyCoordinates.csv).\n''')
 
     filename = input('Input: ')
 
-    print('''\nSelect the conversion direction:\n1. Lat/lon to UTM input -> LL2utm 
-2. UTM to lat/lon input -> utm2LL\n3. Lat/Lon (DMS) to UTM input -> LLdms2utm\n''')
 
-    conversionDirection = str(input('Input: '))
+    while not os.path.isfile(filename):
+        print('''\nThe file/path you entered does not exist. Please re-enter your desired file or path. If you would like to exit enter "quit" ''')
+        filename = input('Input: ')
+        if filename == 'quit':
+            os._exit(1)
 
     print('\nWhat datum you would like to reference the conversion with (i.e. NAD 83, WGS 84 etc.:')
-
     datum_input = input('Input: ')
+    
+    print('''\nSelect the conversion direction:\n1. Lat/lon to UTM input -> LL2utm 
+2. UTM to lat/lon input -> utm2LL\n3. Lat/Lon (DMS) to UTM input -> LLdms2utm\n''')
+    conversionDirection = str(input('Input: '))
+    
+    conv_complete = False
+    while not conv_complete:
+        if conversionDirection == 'LL2utm':
+            batch_LL2utm(filename, datum_input)
+            conv_complete = True
 
-    if conversionDirection == 'LL2utm':
-        batch_LL2utm(filename, datum_input)
-        conv_complete = True
+        elif conversionDirection == 'utm2LL':
+            print('What zone are the sets of UTM coordinates in: ')
+            Zone = int(input('Input: '))
 
-    elif conversionDirection == 'utm2LL':
-        print('What zone are the sets of UTM coordinates in: ')
-        Zone = int(input('Input: '))
+            print('What zone quadrant are the sets of UTM coordinates in? (ex. U) ')
+            zoneQuad = str(input('Input: '))
 
-        print('What zone quadrant are the sets of UTM coordinates in? (ex. U) ')
-        zoneQuad = str(input('Input: '))
+            print('''Are the sets of UTM coordinates in the northern or southern hemisphere: Enter True for Northern 
+    and False for Southern''')
+            isNorth = bool(input('Input: '))
 
-        print('''Are the sets of UTM coordinates in the northern or southern hemisphere: Enter True for Northern 
-and False for Southern''')
-        isNorth = bool(input('Input: '))
+            batch_utm2LL(filename, datum_input, Zone, zoneQuad, isNorth)
+            conv_complete = True
 
-        batch_utm2LL(filename, datum_input, Zone, zoneQuad, isNorth)
-        conv_complete = True
+        elif conversionDirection == 'LLdms2utm':
+            batch_dms2utm(filename, datum_input)
+            conv_complete = True
 
-    elif conversionDirection == 'LLdms2utm':
-        batch_dms2utm(filename, datum_input)
-        conv_complete = True
-
-    else:
-        print('No valid conversion direction chosen please re-run the script\n')
-        conv_complete = False
+        else:
+            print('''\nNo valid conversion direction chosen please re-enter your desired direction. If you would like to terminate enter "quit" \n''')
+            conversionDirection = str(input('Input: '))
+            if conversionDirection == 'quit':
+                os._exit(1)
+            conv_complete = False
 
     if conv_complete:
         scriptDirectory = os.getcwd()
