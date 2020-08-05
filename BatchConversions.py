@@ -1,18 +1,19 @@
 from CoordinateConversion import LL2utm, utm2LL, getLLfromDMS, distanceBetweenLL, distanceBetweenUTM
 import csv
 import os
+import sys
 
 
 # Give & get filename for the csv file that needs to be converted, the conversion direction, and desired datum
 def mainMenu():
-    print('utm2LL and LL2utm  Conversion Tool'.center(40, '='))
+    print('utm2LL and LL2utm Conversion Tool'.center(40, '='))
     
     filename = get_file()
     while not os.path.isfile(filename):
         print('This path or file does not exist')
         filename = get_file()
         if filename == 'quit':
-            os._exit(1)
+            os._exit(0)
 
     print('\nWhat datum you would like to reference the conversion with (i.e. NAD 83, WGS 84 etc.:\n')
     datum_input = input('Input: ')
@@ -20,13 +21,11 @@ def mainMenu():
     conv_dir = get_ConversionDirection()
     conv_complete = False
     while not conv_complete:
-
         if conv_dir == 'LL2utm':
             batch_LL2utm(filename, datum_input)
             conv_complete = True
 
         elif conv_dir == 'utm2LL':
-            
             print('What zone are the sets of UTM coordinates in: ')
             Zone = int(input('Input: '))
             print('What zone quadrant are the sets of UTM coordinates in? (ex. U) ')
@@ -46,7 +45,7 @@ def mainMenu():
             print('\nNo valid conversion direction chosen please re-enter your desired direction. If you would like to terminate enter "quit" \n')
             conv_dir = get_ConversionDirection()
             if conv_dir == 'quit':
-                os._exit(1)
+                os._exit(0)
 
     scriptDirectory = os.getcwd()
     print(f'Conversion Complete. Please check [{scriptDirectory}] for the converted file.')
