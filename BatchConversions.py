@@ -9,29 +9,29 @@ def mainMenu():
     print('utm2LL and LL2utm Conversion Tool'.center(40, '='))
     
     filename = get_file()
-    while not os.path.isfile(filename):
+    while os.path.isfile(filename) is False:
         print('This path or file does not exist')
         filename = get_file()
         if filename == 'quit':
             os._exit(0)
 
     print('\nWhat datum you would like to reference the conversion with (i.e. NAD 83, WGS 84 etc.:\n')
-    datum_input = input('Input: ')
+    datum_input = str(input('Input: '))
 
     conv_dir = get_ConversionDirection()
     conv_complete = False
-    while not conv_complete:
+    while conv_complete is not True:
+
         if conv_dir == 'LL2utm':
             batch_LL2utm(filename, datum_input)
             conv_complete = True
 
         elif conv_dir == 'utm2LL':
-            print('What zone are the sets of UTM coordinates in: ')
+            print('\nWhat zone are the sets of UTM coordinates in: \n')
             Zone = int(input('Input: '))
-            print('What zone quadrant are the sets of UTM coordinates in? (ex. U) ')
+            print('\nWhat zone quadrant are the sets of UTM coordinates in? (ex. U)\n')
             zoneQuad = str(input('Input: '))
-            print('''Are the sets of UTM coordinates in the northern or southern hemisphere: Enter True for Northern 
-    and False for Southern''')
+            print('''\nAre the sets of UTM coordinates in the northern or southern hemisphere: Enter True for Northern and False for Southern\n''')
             isNorth = bool(input('Input: '))
             
             batch_utm2LL(filename, datum_input, Zone, zoneQuad, isNorth)
@@ -65,8 +65,7 @@ please enter the filename for your .csv file (example: MyCoordinates.csv).\n''')
 
 # Method returns the conversion direction as a string 
 def get_ConversionDirection():
-    print('''Select the conversion direction:\n1. Lat/lon to UTM input -> LL2utm 
-2. UTM to lat/lon input -> utm2LL\n3. Lat/Lon (DMS) to UTM input -> LLdms2utm\n''')
+    print('''Select the conversion direction:\n1. Lat/lon to UTM input -> LL2utm\n2. UTM to lat/lon input -> utm2LL\n3. Lat/Lon (DMS) to UTM input -> LLdms2utm\n''')
     conv_dir = str(input('Input: '))
     return conv_dir
 
