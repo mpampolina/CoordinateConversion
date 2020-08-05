@@ -6,8 +6,6 @@ import sys
 
 # Give & get filename for the csv file that needs to be converted, the conversion direction, and desired datum
 def mainMenu():
-    print('utm2LL and LL2utm Conversion Tool'.center(40, '='))
-    
     filename = get_file()
     while os.path.isfile(filename) is False:
         print('This path or file does not exist')
@@ -25,7 +23,7 @@ def mainMenu():
         if conv_dir == 'LL2utm':
             batch_LL2utm(filename, datum_input)
             conv_complete = True
-
+            
         elif conv_dir == 'utm2LL':
             print('\nWhat zone are the sets of UTM coordinates in: \n')
             Zone = int(input('Input: '))
@@ -49,9 +47,6 @@ def mainMenu():
 
     scriptDirectory = os.getcwd()
     print(f'Conversion Complete. Please check [{scriptDirectory}] for the converted file.')
-    print("Press Enter to continue ...")
-    input()
-
 
 # Method returns the filename or file path both of which are suitable
 def get_file():
@@ -148,5 +143,11 @@ def batch_utm2LL(filename, datum_in, zone, zoneQuadrant, is_north):
 
 # main    
 if __name__ == "__main__":
-
-    mainMenu()
+    Run = True
+    print('Welcome to the utm2LL and LL2utm Conversion Tool'.center(40, '='))
+    
+    while Run == True:
+        mainMenu()
+        print('\nTo execute another batch conversion press enter to terminante eneter "quit"\n')
+        if input('Input: ')== 'quit':
+            Run = False
