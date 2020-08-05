@@ -14,20 +14,20 @@ SouthQuadrants = ['M', 'L', 'K', 'J', 'H', 'G', 'F', 'E', 'D', 'C']
 # b -> semi-minor axis (distance from the co-vertex or "short-distance" vertex to the center of an ellipse)
 
 Datums = {
-    'WGS 84': (6378137, 6356752.3142),
-    'NAD 83': (6378137, 6356752.3142),
-    'GRS 80': (6378137, 6356752.3141),
-    'WGS 72': (6378135, 6356750.5),
-    'Australian 1965': (6378160, 6356774.7),
-    'Krasovsky 1940': (6378245, 6356863),
-    'North American 1927': (6378206.4, 6356583.8),
-    'International 1924': (6378388, 6356911.9),
-    'Hayford 1909': (6378388, 6356911.9),
-    'Clarke 1880': (6378249.1, 6356514.9),
-    'Clarke 1866': (6378206.4, 6356583.8),
-    'Airy 1830': (6377563.4, 6356256.9),
-    'Bessel 1841': (6377397.2, 6356079),
-    'Everest 1830': (6377276.3, 6356075.4)
+    'wgs84': (6378137, 6356752.3142),
+    'nad83': (6378137, 6356752.3142),
+    'grs80': (6378137, 6356752.3141),
+    'wgs72': (6378135, 6356750.5),
+    'australian1965': (6378160, 6356774.7),
+    'krasovsky1940': (6378245, 6356863),
+    'northamerican1927': (6378206.4, 6356583.8),
+    'international1924': (6378388, 6356911.9),
+    'hayford1909': (6378388, 6356911.9),
+    'clarke1880': (6378249.1, 6356514.9),
+    'clarke1866': (6378206.4, 6356583.8),
+    'airy1830': (6377563.4, 6356256.9),
+    'bessel1841': (6377397.2, 6356079),
+    'everest1830': (6377276.3, 6356075.4)
 }
 
 
@@ -42,7 +42,7 @@ def getDatumProperties(a, b):
     return e, n, AA
 
 
-def LL2utm(lat, long, datum='WGS 84'):
+def LL2utm(lat, long, datum='wgs84'):
     a, b = Datums[datum]
 
     # latitude format alterations
@@ -101,7 +101,7 @@ def LL2utm(lat, long, datum='WGS 84'):
     return Easting, Northing, zone, zoneQuadrant
 
 
-def utm2LL(Easting, Northing, zone, zoneQuadrant=None, North=None, datum='WGS 84'):
+def utm2LL(Easting, Northing, zone, zoneQuadrant=None, North=None, datum='wgs84'):
     a, b = Datums[datum]
     zone_cm = getZoneCM(zone)           # zone central meridian in degrees longitude
 
@@ -296,18 +296,18 @@ if __name__ == "__main__":
     # implementation also has a tendency to underestimate by 1 millimeter on the Northing side, likely due to
     # accruing a significant amount of floating point error over the course of the calculations.
 
-    test = False
+    test = True
     if test:
         Latitude, Longitude = getLLfromDMS(49, 6, 57.31599, -119, 40, 33.63357)
         print(f"Kobau 1 Latitude, Longitude - {Latitude, Longitude}")
-        print(f"Kobau 1 conversion to UTM (Easting, Northing) - {LL2utm(Latitude, Longitude, datum='WGS 84')}")
+        print(f"Kobau 1 conversion to UTM (Easting, Northing) - {LL2utm(Latitude, Longitude, datum='wgs84')}")
         print(f"Kobau 1 true values (Easting, Northing) - (304734.658, 5443790.965)")
-        print(f"Kobau 1 conversion to UTM and back {utm2LL(*LL2utm(Latitude, Longitude, datum='WGS 84'))}")
+        print(f"Kobau 1 conversion to UTM and back {utm2LL(*LL2utm(Latitude, Longitude, datum='wgs84'))}")
 
         print("\n")
 
         Latitude, Longitude = getLLfromDMS(49, 6, 50.67477, -119, 40, 24.04625)
         print(f"Kobau 2 Latitude, Longitude - {Latitude, Longitude}")
-        print(f"Kobau 2 conversion to UTM (Easting, Northing) - {LL2utm(Latitude, Longitude, datum='WGS 84')}")
+        print(f"Kobau 2 conversion to UTM (Easting, Northing) - {LL2utm(Latitude, Longitude, datum='wgs84')}")
         print(f"Kobau 1 true values (Easting, Northing) - (304921.726, 5443579.054)")
-        print(f"Kobau 2 conversion to UTM and back {utm2LL(*LL2utm(Latitude, Longitude, datum='WGS 84'))}")
+        print(f"Kobau 2 conversion to UTM and back {utm2LL(*LL2utm(Latitude, Longitude, datum='wgs84'))}")
