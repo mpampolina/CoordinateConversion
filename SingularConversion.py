@@ -11,8 +11,8 @@ def menu():
     conv_dir = get_ConversionDirection()
 
     if conv_dir.casefold() == 'll2utm':
-        Lat = int(input('\nThe latitude is: '))
-        Lon = int(input('The longitude is: '))
+        Lat = float(input('\nThe latitude is: '))
+        Lon = float(input('The longitude is: '))
         print(f"\nConversion to UTM (Easting, Northing) - {LL2utm(Lat, Lon, datum)}")
         
     elif conv_dir.casefold() == 'lldms2utm':
