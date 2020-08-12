@@ -26,11 +26,11 @@ def mainMenu():
     conv_complete = False
     while not conv_complete:
 
-        if conv_dir == 'LL2utm':
+        if conv_dir == 'll2utm':
             batch_LL2utm(filename, datum_input)
             conv_complete = True
 
-        elif conv_dir == 'utm2LL':
+        elif conv_dir == 'utm2ll':
             print('\nWhat zone are the sets of UTM coordinates in: \n')
             Zone = int(input('Input: '))
 
@@ -44,13 +44,13 @@ and False for Southern''')
             batch_utm2LL(filename, datum_input, Zone, zoneQuad, isNorth)
             conv_complete = True
 
-        elif conv_dir == 'LLdms2utm':
+        elif conv_dir == 'lldms2utm':
             batch_dms2utm(filename, datum_input)
             conv_complete = True
 
         else:
             print('''\nNo valid conversion direction chosen please re-enter your desired direction. If you would 
-like to terminate enter "quit" \n''')
+like to terminate enter "quit" ''')
             conv_dir = get_ConversionDirection()
             if conv_dir == 'quit':
                 sys.exit()
@@ -71,9 +71,9 @@ please enter the filename for your .csv file (example: MyCoordinates.csv).\n''')
 
 # Method returns the conversion direction as a string 
 def get_ConversionDirection():
-    print('''Select the conversion direction:\n1. Lat/lon to UTM input -> LL2utm\n2. UTM to lat/lon input -> utm2LL
+    print('''\nSelect the conversion direction:\n1. Lat/lon to UTM input -> LL2utm\n2. UTM to lat/lon input -> utm2LL
 3. Lat/Lon (DMS) to UTM input -> LLdms2utm\n''')
-    conv_dir = str(input('Input: '))
+    conv_dir = str(input('Input: ')).lower()
     return conv_dir
 
 
