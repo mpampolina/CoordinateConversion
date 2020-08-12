@@ -6,21 +6,21 @@ import sys
 
 # Give & get filename for the csv file that needs to be converted, the conversion direction, and desired datum
 def mainMenu():
-    filename = get_file()
 
+    filename = get_file()
     while not os.path.isfile(filename):
-        print('This path or file does not exist. Please try again or enter "quit" to terminate the system.')
+        print('\nThis path or file does not exist. Please try again or enter "quit" to terminate the system.')
         filename = get_file()
         if filename == 'quit':
             sys.exit()
 
     datum_input = get_datum()
     while datum_input not in Datums.keys():
-        print('\nThis Datum does not exist. Please try again. To see all available datums, enter "Show Datums"')
+        print('\nInvalid datum entry. Below are the available datums. If you would like to terminate enter "quit"')
+        print(f"Acceptable Datum Entries: {[datum for datum in Datums]}")
         datum_input = get_datum()
-        if datum_input == "showdatums":
-            print(f"Acceptable Datum Entries: {[datum for datum in Datums]}")
-            continue
+        if datum_input == 'quit':
+            sys.exit()
 
     conv_dir = get_ConversionDirection()
     conv_complete = False
@@ -37,8 +37,8 @@ def mainMenu():
             print('\nWhat zone quadrant are the sets of UTM coordinates in? (ex. U)\n')
             zoneQuad = str(input('Input: '))
 
-            print('''Are the sets of UTM coordinates in the northern or southern hemisphere: Enter True for Northern 
-and False for Southern''')
+            print('\nAre the sets of UTM coordinates in the northern or southern hemisphere:')
+            print('Enter True for Northern and False for Southern\n')
             isNorth = bool(input('Input: '))
             
             batch_utm2LL(filename, datum_input, Zone, zoneQuad, isNorth)
@@ -49,7 +49,7 @@ and False for Southern''')
             conv_complete = True
 
         else:
-            print('''\nNo valid conversion direction chosen please re-enter your desired direction. If you would 
+            print('''\nInvalid conversion direction chosen please re-enter your desired direction. If you would 
 like to terminate enter "quit" ''')
             conv_dir = get_ConversionDirection()
             if conv_dir == 'quit':
@@ -78,9 +78,8 @@ def get_ConversionDirection():
 
 
 def get_datum():
-    print('\nWhat datum you would like to reference the conversion with (i.e. NAD 83, WGS 84 etc.):')
-    datum = input('Input: ').lower().replace(' ', '')
-
+    print('\nWhat datum you would like to reference the conversion with (i.e. NAD83, WGS84 etc.):')
+    datum = input('\nInput: ').lower().replace(' ', '')
     return datum
 
 
@@ -93,7 +92,7 @@ def batch_LL2utm(filename, datum_in):
             writer.writerow(
                 ['Latitude', 'Longitude', 'Easting', 'Northing', 'Zone', 'Zone Quadrant', 'CDistance (km)'],)   # header
             next(reader)                                                                # Skip the reader object header
-
+            
             readerList = list(reader)
             distance = 0
             for lineCount, coords in enumerate(readerList, start=1):
