@@ -14,6 +14,7 @@ import sys
 # Give & get filename for the csv file that needs to be converted, the conversion direction, and desired datum
 def mainMenu():
 
+    # While there is no valid file or path continuously ask until it is valid or user quits
     filename = get_file()
     while not os.path.isfile(filename):
         print(
@@ -23,6 +24,7 @@ def mainMenu():
         if filename == "quit":
             sys.exit()
 
+    # While no valid datum continuously ask user until it is valid or user quits
     datum_input = get_datum()
     while datum_input not in Datums.keys():
         print('\nInvalid datum entry. Below are the available datums. If you would like to terminate enter "quit"')
@@ -31,6 +33,7 @@ def mainMenu():
         if datum_input == 'quit':
             sys.exit()
 
+    # continuously ask user for valid conversion direction until valid or quits
     conv_dir = get_ConversionDirection()
     conv_complete = False
     while not conv_complete:
@@ -49,7 +52,7 @@ def mainMenu():
             print('\nAre the sets of UTM coordinates in the northern or southern hemisphere:')
             print('Enter True for Northern and False for Southern\n')
             isNorth = bool(input('Input: '))
-            
+
             batch_utm2LL(filename, datum_input, Zone, zoneQuad, isNorth)
             conv_complete = True
 
@@ -59,7 +62,7 @@ def mainMenu():
 
         else:
             print(
-                """\nInvalid conversion direction chosen please re-enter your desired direction. If you would 
+                """\nInvalid conversion direction chosen please re-enter your desired direction. If you would
     like to terminate enter "quit" """
             )
             conv_dir = get_ConversionDirection()
@@ -79,7 +82,7 @@ def get_file():
     )
     print("\nOption-1: Please enter the path for your .csv file.")
     print(
-        """Option-2: Ensure that the selected csv file is located in the same directory as this script and 
+        """Option-2: Ensure that the selected csv file is located in the same directory as this script and
 please enter the filename for your .csv file (example: MyCoordinates.csv).\n"""
     )
     filename = str(input("Input: "))
@@ -105,7 +108,7 @@ def get_datum():
     return datum
 
 
-# Convert a CSV file of latitude and longitude coordinates to UTM
+# Method converts a CSV file of latitude and longitude coordinates to UTM
 def batch_LL2utm(filename, datum_in):
     with open(filename) as f:  # Open Latitude/Longitude file
         reader = csv.reader(f, delimiter=",")  # Generate a reader object from file
@@ -148,7 +151,7 @@ def batch_LL2utm(filename, datum_in):
     print(f"\nTotal polyline distance travelled: {distance}km\n")
 
 
-# Convert CSV file of latitude longitude coordinates in deg,min,sec (dms) notation to UTM
+# Method converts CSV file of latitude longitude coordinates in deg,min,sec (dms) notation to UTM
 def batch_dms2utm(filename, datum_in):
     with open(filename) as f:  # Open Latitude/Longitude file
         reader = csv.reader(f, delimiter=",")  # Generate a reader object from file
@@ -185,7 +188,7 @@ def batch_dms2utm(filename, datum_in):
     print(f"\nConverted {lineCount} coordinates")
 
 
-# Convert a CSV file of UTM coordinates to latitude and longitude
+# Method converts a CSV file of UTM coordinates to latitude and longitude
 def batch_utm2LL(filename, datum_in, zone, zoneQuadrant, is_north):
     with open(filename) as f:  # Open the UTM file from the dxf_to_csv parser
         reader = csv.reader(f, delimiter=",")  # Generate a reader object from file
