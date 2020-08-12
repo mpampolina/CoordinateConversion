@@ -90,7 +90,8 @@ def batch_LL2utm(filename, datum_in):
         reader = csv.reader(f, delimiter=',')                                   # Generate a reader object from file
         with open('LL2utm_out.csv', 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
-            writer.writerow(['Latitude', 'Longitude', 'Easting', 'Northing', 'Zone', 'Zone Quadrant'],)  # Write header
+            writer.writerow(
+                ['Latitude', 'Longitude', 'Easting', 'Northing', 'Zone', 'Zone Quadrant', 'CDistance (km)'],)   # header
             next(reader)                                                                # Skip the reader object header
 
             readerList = list(reader)
@@ -100,12 +101,13 @@ def batch_LL2utm(filename, datum_in):
                 lon_in1 = float(coords[1])
                 east_out, north_out, zone, zone_quad = LL2utm(lat_in1, lon_in1, datum=datum_in)
 
-                if lineCount < len(readerList):
-                    lat_in2 = float(readerList[lineCount][0])   # next latitude
-                    lon_in2 = float(readerList[lineCount][1])   # next longitude
-                    distance += distanceBetweenLL(lat_in1, lon_in1, lat_in2, lon_in2)
+                prevIndex = lineCount - 2                       # index of previous coord
+                if prevIndex >= 0:                              # will start on 2nd coord
+                    lat_in0 = float(readerList[prevIndex][0])   # previous latitude
+                    lon_in0 = float(readerList[prevIndex][1])   # previous longitude
+                    distance += distanceBetweenLL(lat_in0, lon_in0, lat_in1, lon_in1)
 
-                writer.writerow([lat_in1, lon_in1, east_out, north_out, zone, zone_quad])
+                writer.writerow([lat_in1, lon_in1, east_out, north_out, zone, zone_quad, distance])
 
             writer.writerow(['TotalDistance(km)', distance])
     print(f'\nConverted {lineCount} coordinates')
@@ -138,7 +140,7 @@ def batch_utm2LL(filename, datum_in, zone, zoneQuadrant, is_north):
         reader = csv.reader(f, delimiter=',')                           # Generate a reader object from file
         with open('utm2LL_out.csv', 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
-            writer.writerow(['Latitude', 'Longitude'],)                 # Write headers for the writer object
+            writer.writerow(['Latitude', 'Longitude', 'CDistance (km)'],)    # Write headers for the writer object
             next(reader)                                                # Skip the reader object header
 
             readerList = list(reader)
@@ -149,12 +151,13 @@ def batch_utm2LL(filename, datum_in, zone, zoneQuadrant, is_north):
                 lat_out, lon_out = utm2LL(east_in1, north_in1, zone, zoneQuadrant=zoneQuadrant, North=is_north,
                                           datum=datum_in)
 
-                if lineCount < len(readerList):
-                    east_in2 = float(readerList[lineCount][0])      # next easting
-                    north_in2 = float(readerList[lineCount][1])     # next northing
-                    distance += distanceBetweenUTM(east_in1, north_in1, east_in2, north_in2)
+                prevIndex = lineCount - 2                           # index of previous coord
+                if prevIndex >= 0:                                  # will start on 2nd coord
+                    east_in0 = float(readerList[prevIndex][0])      # previous easting
+                    north_in0 = float(readerList[prevIndex][1])     # previous northing
+                    distance += distanceBetweenUTM(east_in0, north_in0, east_in1, north_in1)
 
-                writer.writerow([lat_out, lon_out])
+                writer.writerow([lat_out, lon_out, distance])
 
             writer.writerow(['TotalDistance(km)', distance])
     print(f'\nConverted {lineCount} coordinates')

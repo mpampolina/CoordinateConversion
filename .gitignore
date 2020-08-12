@@ -3,6 +3,7 @@
 /__pycache__
 /releases
 /originals
+/.vscode
 profileFromDXF.csv
 profileFromKML.csv
 profile.kml
