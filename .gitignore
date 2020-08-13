@@ -4,6 +4,8 @@
 /releases
 /originals
 /.vscode
+/datafiles
+/build
 profileFromDXF.csv
 profileFromKML.csv
 profile.kml
@@ -13,4 +15,3 @@ LL2utm_out.csv
 utm2LL_out-original.csv
 utm2LL_out.csv
 dms2utm_out.csv
-/datafiles
