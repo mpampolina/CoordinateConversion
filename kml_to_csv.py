@@ -27,7 +27,7 @@ def kmlParser(Path, Filename):
                 writer.writerow(process_coordinate_string(coords.string))
 
             scriptDirectory = os.getcwd()
-            print(f'Conversion Complete. Please check [{scriptDirectory}] for the converted file.')
+            print(f'\nConversion Complete. Please check [{scriptDirectory}] for the converted file.')
 
             print("Press Enter to continue ...")
             input()
@@ -42,7 +42,7 @@ please enter the filename for your .kml file.\n''')
     Path = input('Input:')
     while not os.path.isfile(Path):
         print('Your selected path either does not exist or is not a file. Please try again.')
-        Path = input('Input:')
+        Path = input('\nInput: ')
     Filename = os.path.basename(Path)
     Filename = Filename.split('.')[0]
     return Path, Filename
