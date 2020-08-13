@@ -101,7 +101,7 @@ def get_ConversionDirection():
 
 def get_datum():
     print(
-        "\nWhat datum you would like to reference the conversion with (i.e. NAD 83, WGS 84 etc.):"
+        "\nWhat datum you would like to reference the conversion with (i.e. NAD 83, WGS 84 etc.):\n"
     )
     datum = input("Input: ").lower().replace(" ", "")
 
@@ -122,7 +122,7 @@ def batch_LL2utm(filename, datum_in):
                     "Northing",
                     "Zone",
                     "Zone Quadrant",
-                    "CDistance (km)",
+                    "CumDistance (km)",
                 ],
             )  # header
             next(reader)  # Skip the reader object header
@@ -165,13 +165,16 @@ def batch_dms2utm(filename, datum_in):
                     "Northing",
                     "Zone",
                     "Zone Quadrant",
+                    "CumDistance (km)"
                 ],
             )  # Write header
             next(reader)  # Skip the reader object header
 
-            for lineCount, coords in enumerate(reader, start=1):
-
-                lat_in, lon_in = getLLfromDMS(
+            readerList = list(reader)
+            distance = 0
+            for lineCount, coords in enumerate(readerList, start=1):
+                # Retrieve data and convert to decimal degrees
+                lat_in1, lon_in1 = getLLfromDMS(
                     float(coords[0]),
                     float(coords[1]),
                     float(coords[2]),
@@ -179,13 +182,31 @@ def batch_dms2utm(filename, datum_in):
                     float(coords[4]),
                     float(coords[5]),
                 )
-
+                # Convert Lat/Lon to utm
                 east_out, north_out, zone, zone_quad = LL2utm(
-                    lat_in, lon_in, datum=datum_in
+                    lat_in1, lon_in1, datum=datum_in
+                )
+                # Calculate cumulative distance
+                prevIndex = lineCount - 2  # index of previous coord
+                if prevIndex >= 0:  # will start on 2nd coord
+                    lat_in0, lon_in0= getLLfromDMS(
+                        float(readerList[prevIndex][0]),
+                        float(readerList[prevIndex][1]),
+                        float(readerList[prevIndex][2]),
+                        float(readerList[prevIndex][3]),
+                        float(readerList[prevIndex][4]),
+                        float(readerList[prevIndex][5]),
+                    )
+                    distance += distanceBetweenLL(lat_in0, lon_in0, lat_in1, lon_in1)
+                
+                # Write to output csv file
+                writer.writerow(
+                    [lat_in1, lon_in1, east_out, north_out, zone, zone_quad, distance]
                 )
 
-                writer.writerow([lat_in, lon_in, east_out, north_out, zone, zone_quad])
+            writer.writerow(["TotalDistance(km)", distance])      
     print(f"\nConverted {lineCount} coordinates")
+    print(f"\nTotal polyline distance travelled: {distance}km\n")
 
 
 # Method converts a CSV file of UTM coordinates to latitude and longitude
@@ -195,7 +216,7 @@ def batch_utm2LL(filename, datum_in, zone, zoneQuadrant, is_north):
         with open("utm2LL_out.csv", "w", newline="") as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(
-                ["Latitude", "Longitude", "CDistance (km)"],
+                ["Latitude", "Longitude", "CumDistance (km)"],
             )  # Write headers for the writer object
             next(reader)  # Skip the reader object header
 
@@ -233,6 +254,7 @@ if __name__ == "__main__":
     Run = True
     print("Welcome to the utm2LL and LL2utm Conversion Tool".center(40, "="))
 
+    # Run main menu until user decides to quit
     while Run:
         mainMenu()
         print(
