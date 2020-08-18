@@ -42,7 +42,7 @@ def pathInput():
 please enter the filename for your .dxf file.\n''')
     Path = input('Input:')
     while not os.path.isfile(Path):
-        print('Your selected path either does not exist or is not a file. Please try again.')
+        print('\nYour selected path either does not exist or is not a file. Please try again.')
         Path = input('Input:')
     Filename = os.path.basename(Path)
     Filename = Filename.split('.')[0]
