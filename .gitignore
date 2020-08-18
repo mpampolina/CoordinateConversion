@@ -6,6 +6,7 @@
 /.vscode
 /datafiles
 /build
+/dist
 profileFromDXF.csv
 profileFromKML.csv
 profile.kml
