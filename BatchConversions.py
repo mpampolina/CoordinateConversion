@@ -115,9 +115,12 @@ def get_datum():
 
 # Method converts a CSV file of latitude and longitude coordinates to UTM
 def batch_LL2utm(filename, datum_in):
+    print("\nWhat would you like to name your output file? (ex. myfile)")
+    outputFilename = str(input("\nInput: ")) + '.csv' # Create output file name
+    
     with open(filename) as f:  # Open Latitude/Longitude file
         reader = csv.reader(f, delimiter=",")  # Generate a reader object from file
-        with open("LL2utm_out.csv", "w", newline="") as csvFile:
+        with open(outputFilename, "w", newline="") as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(
                 [
@@ -151,16 +154,19 @@ def batch_LL2utm(filename, datum_in):
                     [lat_in1, lon_in1, east_out, north_out, zone, zone_quad, distance]
                 )
 
-            writer.writerow(["TotalDistance(km)", distance])
+            # writer.writerow(["TotalDistance(km)", distance])
     print(f"\nConverted {lineCount} coordinates")
     print(f"\nTotal polyline distance travelled: {distance}km\n")
 
 
 # Method converts CSV file of latitude longitude coordinates in deg,min,sec (dms) notation to UTM
 def batch_dms2utm(filename, datum_in):
+    print("\nWhat would you like to name your output file? (ex. myfile)")
+    outputFilename = str(input("\nInput: ")) + '.csv' # Create output file name
+
     with open(filename) as f:  # Open Latitude/Longitude file
         reader = csv.reader(f, delimiter=",")  # Generate a reader object from file
-        with open("dms2utm_out.csv", "w", newline="") as csvFile:
+        with open(outputFilename, "w", newline="") as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(
                 [
@@ -209,16 +215,19 @@ def batch_dms2utm(filename, datum_in):
                     [lat_in1, lon_in1, east_out, north_out, zone, zone_quad, distance]
                 )
 
-            writer.writerow(["TotalDistance(km)", distance])      
+            # writer.writerow(["TotalDistance(km)", distance])      
     print(f"\nConverted {lineCount} coordinates")
     print(f"\nTotal polyline distance travelled: {distance}km\n")
 
 
 # Method converts a CSV file of UTM coordinates to latitude and longitude
 def batch_utm2LL(filename, datum_in, zone, zoneQuadrant, is_north):
+    print("\nWhat would you like to name your output file? (ex. myfile)")
+    outputFilename = str(input("\nInput: ")) + '.csv' # Create output file name
+    
     with open(filename) as f:  # Open the UTM file from the dxf_to_csv parser
         reader = csv.reader(f, delimiter=",")  # Generate a reader object from file
-        with open("utm2LL_out.csv", "w", newline="") as csvFile:
+        with open(outputFilename, "w", newline="") as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(
                 ["Latitude", "Longitude", "CumDistance (km)"],
@@ -249,7 +258,7 @@ def batch_utm2LL(filename, datum_in, zone, zoneQuadrant, is_north):
 
                 writer.writerow([lat_out, lon_out, distance])
 
-            writer.writerow(["TotalDistance(km)", distance])
+            # writer.writerow(["TotalDistance(km)", distance])
     print(f"\nConverted {lineCount} coordinates")
     print(f"\nTotal polyline distance travelled: {distance}km\n")
 
