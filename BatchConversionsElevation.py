@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from SingularConversionElevation import choiceValidation, getDatum, geoidOptions
+from BatchConversions import get_file
 import os
 import time
 import sys
@@ -26,7 +27,7 @@ def menu():
 3. From an Ellipsoidal Elevation to an Orthometric Elevation -> Enter "3"
 4. From an Orthometric Elevation to an Ellipsoidal Elevation -> Enter "4"'''
     )
-    conv_direction = choiceValidation(["1", "2", "3", "4"], "Conversion Direction: ")
+    conv_direction = choiceValidation(["1", "2", "3", "4"], "\nConversion Direction: ")
 
     convert = False
 
@@ -50,7 +51,7 @@ def menu():
 
         value, _ = getDatum(verb)
 
-    filename = getFilename()
+    filename = get_file()
 
     batchProcessing(convert, value, filename)
 
@@ -90,26 +91,6 @@ def batchProcessing(convert, value, filename):
     time.sleep(5)  # wait 5 seconds for the download to complete
 
     browser.quit()
-
-
-def getFilename():
-    while True:
-        print(
-            """Ensure that the selected csv file is located in the same directory as this script and 
-please enter the filename for your .csv file (example: MyCoordinates.csv).\n"""
-        )
-        filename = str(input("Input: "))
-        if not os.path.isfile(filename):
-            print(
-                'This path or file does not exist. Please try again or enter "quit" to terminate the system.'
-            )
-        elif filename == "quit":
-            sys.exit()
-        else:
-            break
-
-    return filename
-
 
 if __name__ == "__main__":
     menu()

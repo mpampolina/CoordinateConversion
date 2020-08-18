@@ -16,13 +16,6 @@ def mainMenu():
 
     # While there is no valid file or path continuously ask until it is valid or user quits
     filename = get_file()
-    while not os.path.isfile(filename):
-        print(
-            '\nThis path or file does not exist. Please try again or enter "quit" to terminate the system.'
-        )
-        filename = get_file()
-        if filename == "quit":
-            sys.exit()
 
     # While no valid datum continuously ask user until it is valid or user quits
     datum_input = get_datum()
@@ -77,15 +70,27 @@ def mainMenu():
 
 # Method returns the filename or file path both of which are suitable
 def get_file():
-    print(
+    while True:
+        print(
         "\nPlease enter one of the following options to complete your coordinate conversion:"
-    )
-    print("\nOption-1: Please enter the path for your .csv file.")
-    print(
+        )
+        print("\nOption-1: Please enter the path for your .csv file.")
+        print(
         """Option-2: Ensure that the selected csv file is located in the same directory as this script and
-please enter the filename for your .csv file (example: MyCoordinates.csv).\n"""
-    )
-    filename = str(input("Input: "))
+          please enter the filename for your .csv file (example: MyCoordinates.csv).\n"""
+        )
+
+        filename = str(input("Input: "))
+      
+        if filename == "quit":
+            sys.exit()
+        elif not os.path.isfile(filename):
+            print(
+                '\nThis path or file does not exist. Please try again or enter "quit" to terminate the system.'
+            )
+        else:
+            break
+
     return filename
 
 

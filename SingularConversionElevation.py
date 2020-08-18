@@ -146,9 +146,9 @@ def menu():
 
 def choiceValidation(choiceList, inputMessage="Input: "):
     while True:
-        choice = input(inputMessage).replace(" ", "")
+        choice = input(inputMessage).upper().replace(" ", "")
         if choice not in choiceList:
-            print("Invalid Option. Please Try again.")
+            print("\nInvalid Option. Please Try again.")
         else:
             break
     return choice
@@ -180,7 +180,7 @@ def zoneValidation(inputMessage="Zone: "):
 def getDatum(verb):
     epoch = False
     print(f'\nSpecify your {verb} orthometric datum: "CGVD28" or "CGVD2013"')
-    datum = choiceValidation(["CGVD28", "CGVD2013"], "Datum: ")
+    datum = choiceValidation(["CGVD28", "CGVD2013"], "\nDatum: ")
     if datum == "CGVD2013":
         epoch = True
     return datum, epoch
