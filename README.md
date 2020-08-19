@@ -7,11 +7,12 @@ WGS 84, NAD83, GRS 80, WGS 72, Australian 1965, Krasovsky 1940, North American 1
 
 ### Input Files
 ------
+Note that if you're using the KML or DXF to CSV scripts on your original polyline all the input files will be accordingly formatted for further use in the batchConvrsion.py
 All input files must be .csv format. The three options for file input are as follows:
 1. Lat, Lon, Elevation (decimal degrees) must occupy the first two columns of your csv file **in that order**.
 2. Lat(d,m,s),Lon(d,m,s), Elevation must occupy the first six columns of your csv file. The order for this must be latitude (deg, min, sec) in cols 1,2,3 respectively while longitude follows as (deg, min, sec) in cols 4, 5, and 6. Entries must be **in that order**.
 3. UTM (easting, northing, zone, elevation) must occupy the first two columns of your csv file **in that order**.
-Note that if you're using the KML or DXF to CSV scripts on your original profile all the input files will be accordingly formatted for further use in the batchConvrsion.py
+
 
 **The first set of coordinates should appear on the 2nd row (the system ignores column headers).**
 
