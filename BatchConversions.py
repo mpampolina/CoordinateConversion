@@ -11,11 +11,11 @@ import os
 import sys
 
 
-# Give & get filename for the csv file that needs to be converted, the conversion direction, and desired datum
+
 def mainMenu():
 
     # While there is no valid file or path continuously ask until it is valid or user quits
-    filename = get_file()
+    path = get_path()
 
     # While no valid datum continuously ask user until it is valid or user quits
     datum_input = get_datum()
@@ -32,7 +32,7 @@ def mainMenu():
     while not conv_complete:
 
         if conv_dir == "ll2utm":
-            batch_LL2utm(filename, datum_input)
+            batch_LL2utm(path, datum_input)
             conv_complete = True
 
         elif conv_dir == "utm2ll":
@@ -46,11 +46,11 @@ def mainMenu():
             print('Enter True for Northern and False for Southern\n')
             isNorth = bool(input('Input: '))
 
-            batch_utm2LL(filename, datum_input, Zone, zoneQuad, isNorth)
+            batch_utm2LL(path, datum_input, Zone, zoneQuad, isNorth)
             conv_complete = True
 
         elif conv_dir == "lldms2utm":
-            batch_dms2utm(filename, datum_input)
+            batch_dms2utm(path, datum_input)
             conv_complete = True
 
         else:
@@ -68,8 +68,8 @@ def mainMenu():
     )
 
 
-# Method returns the filename or file path both of which are suitable
-def get_file():
+# Method returns the path or file path both of which are suitable
+def get_path():
     while True:
         print(
         "\nPlease enter one of the following options to complete your coordinate conversion:"
@@ -77,21 +77,21 @@ def get_file():
         print("\nOption-1: Please enter the path for your .csv file.")
         print(
         """Option-2: Ensure that the selected csv file is located in the same directory as this script and
-          please enter the filename for your .csv file (example: MyCoordinates.csv).\n"""
+          please enter the path for your .csv file (example: MyCoordinates.csv).\n"""
         )
 
-        filename = str(input("Input: "))
+        path = str(input("Input: "))
       
-        if filename == "quit":
+        if path == "quit":
             sys.exit()
-        elif not os.path.isfile(filename):
+        elif not os.path.isfile(path):
             print(
                 '\nThis path or file does not exist. Please try again or enter "quit" to terminate the system.'
             )
         else:
             break
 
-    return filename
+    return path
 
 
 # Method returns the conversion direction as a string
@@ -104,21 +104,27 @@ def get_ConversionDirection():
     return conv_dir
 
 
+# Gets datum
 def get_datum():
     print(
         "\nWhat datum you would like to reference the conversion with (i.e. NAD 83, WGS 84 etc.):\n"
     )
     datum = input("Input: ").lower().replace(" ", "")
-
     return datum
 
 
-# Method converts a CSV file of latitude and longitude coordinates to UTM
-def batch_LL2utm(filename, datum_in):
+# Get the output filename as a strign
+def get_outputfilename():
     print("\nWhat would you like to name your output file? (ex. myfile)")
     outputFilename = str(input("\nInput: ")) + '.csv' # Create output file name
+    return outputFilename
+
+
+# Method converts a CSV file of latitude and longitude coordinates to UTM
+def batch_LL2utm(path, datum_in):
+    outputFilename = get_outputfilename()
     
-    with open(filename) as f:  # Open Latitude/Longitude file
+    with open(path) as f:  # Open Latitude/Longitude file
         reader = csv.reader(f, delimiter=",")  # Generate a reader object from file
         with open(outputFilename, "w", newline="") as csvFile:
             writer = csv.writer(csvFile)
@@ -130,7 +136,8 @@ def batch_LL2utm(filename, datum_in):
                     "Northing",
                     "Zone",
                     "Zone Quadrant",
-                    "CumDistance (km)",
+                    "Elevation",
+                    "CumDistance (m)",
                 ],
             )  # header
             next(reader)  # Skip the reader object header
@@ -140,6 +147,7 @@ def batch_LL2utm(filename, datum_in):
             for lineCount, coords in enumerate(readerList, start=1):
                 lat_in1 = float(coords[0])
                 lon_in1 = float(coords[1])
+                elevation = float(coords[2])
                 east_out, north_out, zone, zone_quad = LL2utm(
                     lat_in1, lon_in1, datum=datum_in
                 )
@@ -151,20 +159,19 @@ def batch_LL2utm(filename, datum_in):
                     distance += distanceBetweenLL(lat_in0, lon_in0, lat_in1, lon_in1)
 
                 writer.writerow(
-                    [lat_in1, lon_in1, east_out, north_out, zone, zone_quad, distance]
+                    [lat_in1, lon_in1, east_out, north_out, zone, zone_quad, elevation, distance]
                 )
 
-            # writer.writerow(["TotalDistance(km)", distance])
     print(f"\nConverted {lineCount} coordinates")
-    print(f"\nTotal polyline distance travelled: {distance}km\n")
+    print(f"\nTotal polyline distance travelled: {distance} metres\n")
 
 
 # Method converts CSV file of latitude longitude coordinates in deg,min,sec (dms) notation to UTM
-def batch_dms2utm(filename, datum_in):
-    print("\nWhat would you like to name your output file? (ex. myfile)")
-    outputFilename = str(input("\nInput: ")) + '.csv' # Create output file name
+def batch_dms2utm(path, datum_in):
+   
+    outputFilename = get_outputfilename()
 
-    with open(filename) as f:  # Open Latitude/Longitude file
+    with open(path) as f:  # Open Latitude/Longitude file
         reader = csv.reader(f, delimiter=",")  # Generate a reader object from file
         with open(outputFilename, "w", newline="") as csvFile:
             writer = csv.writer(csvFile)
@@ -176,7 +183,8 @@ def batch_dms2utm(filename, datum_in):
                     "Northing",
                     "Zone",
                     "Zone Quadrant",
-                    "CumDistance (km)"
+                    "Elevation",
+                    "CumDistance (m)"
                 ],
             )  # Write header
             next(reader)  # Skip the reader object header
@@ -193,6 +201,7 @@ def batch_dms2utm(filename, datum_in):
                     float(coords[4]),
                     float(coords[5]),
                 )
+                elevation = float(coords[6])
                 # Convert Lat/Lon to utm
                 east_out, north_out, zone, zone_quad = LL2utm(
                     lat_in1, lon_in1, datum=datum_in
@@ -212,25 +221,32 @@ def batch_dms2utm(filename, datum_in):
                 
                 # Write to output csv file
                 writer.writerow(
-                    [lat_in1, lon_in1, east_out, north_out, zone, zone_quad, distance]
+                    [lat_in1, lon_in1, east_out, north_out, zone, zone_quad, elevation, distance]
                 )
-
-            # writer.writerow(["TotalDistance(km)", distance])      
+   
     print(f"\nConverted {lineCount} coordinates")
-    print(f"\nTotal polyline distance travelled: {distance}km\n")
+    print(f"\nTotal polyline distance travelled: {distance} metres\n")
 
 
 # Method converts a CSV file of UTM coordinates to latitude and longitude
-def batch_utm2LL(filename, datum_in, zone, zoneQuadrant, is_north):
-    print("\nWhat would you like to name your output file? (ex. myfile)")
-    outputFilename = str(input("\nInput: ")) + '.csv' # Create output file name
+def batch_utm2LL(path, datum_in, zone, zoneQuadrant, is_north):
+   
+    outputFilename = get_outputfilename()
     
-    with open(filename) as f:  # Open the UTM file from the dxf_to_csv parser
+    with open(path) as f:  # Open the UTM file from the dxf_to_csv parser
         reader = csv.reader(f, delimiter=",")  # Generate a reader object from file
         with open(outputFilename, "w", newline="") as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(
-                ["Latitude", "Longitude", "CumDistance (km)"],
+                [
+                    "Latitude",
+                    "Longitude",
+                    "Easting",
+                    "Northing",
+                    "Zone",
+                    "Elevation (m)",
+                    "CumDistance (m)"
+                    ],
             )  # Write headers for the writer object
             next(reader)  # Skip the reader object header
 
@@ -239,6 +255,7 @@ def batch_utm2LL(filename, datum_in, zone, zoneQuadrant, is_north):
             for lineCount, coords in enumerate(readerList, start=1):
                 east_in1 = float(coords[0])
                 north_in1 = float(coords[1])
+                elevation = float (coords[2])
                 lat_out, lon_out = utm2LL(
                     east_in1,
                     north_in1,
@@ -256,11 +273,10 @@ def batch_utm2LL(filename, datum_in, zone, zoneQuadrant, is_north):
                         east_in0, north_in0, east_in1, north_in1
                     )
 
-                writer.writerow([lat_out, lon_out, distance])
+                writer.writerow([lat_out, lon_out, east_in1, north_in1, zone, elevation, distance])
 
-            # writer.writerow(["TotalDistance(km)", distance])
     print(f"\nConverted {lineCount} coordinates")
-    print(f"\nTotal polyline distance travelled: {distance}km\n")
+    print(f"\nTotal polyline distance travelled: {distance} metres\n")
 
 
 # main
