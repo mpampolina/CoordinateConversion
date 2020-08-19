@@ -1,9 +1,9 @@
 # import dependencies
-
 from bs4 import BeautifulSoup
 import csv
 import lxml
 import os
+from BatchConversions import get_path, get_outputfilename
 
 
 def process_coordinate_string(string):
@@ -12,11 +12,11 @@ def process_coordinate_string(string):
     return [comma_split[1], comma_split[0], comma_split[2]]     # return (lat, long, elevation)
 
 
-def kmlParser(Path, Filename):
+def kmlParser(path):
     # Open the KML. Read the KML. Open a CSV file. Process a coordinate string to be a CSV row.
     # Make sure "profile.kml" or whatever the file is called is in the same directory
-    outputFilename = Filename + '_kml_converted.csv'
-    with open(Path, 'r') as f:
+    outputFilename = get_outputfilename()
+    with open(path, 'r') as f:
         s = BeautifulSoup(f, 'lxml')
         with open(outputFilename, 'w', newline='') as csvFile:
             writer = csv.writer(csvFile)
@@ -33,21 +33,6 @@ def kmlParser(Path, Filename):
             input()
 
 
-def pathInput():
-    print('KML to CSV Conversion Tool'.center(40, '='))
-    print('\nTo start your conversion, please enter one of the following options:')
-    print('\nOption-1: Please enter the path for your .kml file.')
-    print('''\nOption-2: Ensure that the selected KML file is located in the same directory as this script and
-please enter the filename for your .kml file.\n''')
-    Path = input('Input:')
-    while not os.path.isfile(Path):
-        print('\nYour selected path either does not exist or is not a file. Please try again.')
-        Path = input('\nInput: ')
-    Filename = os.path.basename(Path)
-    Filename = Filename.split('.')[0]
-    return Path, Filename
-
-
 if __name__ == "__main__":
-    path, filename = pathInput()
-    kmlParser(path, filename)
+    path = get_path()
+    kmlParser(path)
