@@ -255,7 +255,7 @@ def batch_utm2LL(path, datum_in, zone, zoneQuadrant, is_north):
             for lineCount, coords in enumerate(readerList, start=1):
                 east_in1 = float(coords[0])
                 north_in1 = float(coords[1])
-                elevation = float (coords[2])
+                elevation = float (coords[3])
                 lat_out, lon_out = utm2LL(
                     east_in1,
                     north_in1,
