@@ -37,9 +37,6 @@ def dxfParser(zone, path):
         print("Press Enter to continue ...")
         input()
 
-def get_zone():
-    print('\nWhat zone are the coordinates in this dxf file from?')
-    return int(input('\nInput: '))
 
 if __name__ == "__main__":
     path = get_path()
