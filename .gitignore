@@ -8,5 +8,6 @@
 /build
 /dist
 *.csv
+*.png
 chromedriver.exe
 ElevationContour.mat
