@@ -20,11 +20,11 @@ def dxfParser(zone, path):
         coordinateList = []
 
         for entry in data:
-            coordinates = {'utm_e': entry[1], 'utm_n': entry[2], 'utm_z': zone, 'Elevation': entry[3]} # Structure of each csv line
+            coordinates = {'utm_e': entry[1], 'utm_n': entry[2], 'utm_z': zone, 'Elevation (m)': entry[3]} # Structure of each csv line
             coordinateList.append(coordinates)
 
         with open(outputFilename, 'w', newline='') as csvFile:
-            fieldnames = ['utm_e', 'utm_n', 'utm_z', 'Elevation']
+            fieldnames = ['utm_e', 'utm_n', 'utm_z', 'Elevation (m)']
             writer = csv.DictWriter(csvFile, fieldnames=fieldnames)
 
             writer.writeheader()
