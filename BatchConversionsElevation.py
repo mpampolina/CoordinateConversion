@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from SingularConversionElevation import choiceValidation, getDatum, geoidOptions
-from BatchConversions import get_file
+from BatchConversions import get_path
 import os
 import time
 import sys
@@ -51,12 +51,12 @@ def menu():
 
         value, _ = getDatum(verb)
 
-    filename = get_file()
+    path = get_path()
 
-    batchProcessing(convert, value, filename)
+    batchProcessing(convert, value, path)
 
 
-def batchProcessing(convert, value, filename):
+def batchProcessing(convert, value, path):
 
     # options to ignore SSL error code 1
     options = webdriver.ChromeOptions()
@@ -82,7 +82,10 @@ def batchProcessing(convert, value, filename):
     ConversionModel_Selector = Select(browser.find_element_by_xpath(DropDown))
     ConversionModel_Selector.select_by_value(Option)
 
-    abs_filename = os.getcwd() + "\\" + filename
+    if os.getcwd() not in path:
+        abs_filename = os.getcwd() + "\\" + path
+    else:
+        abs_filename = path
 
     browser.find_element_by_xpath(ChooseFile_XP).send_keys(abs_filename)
 
