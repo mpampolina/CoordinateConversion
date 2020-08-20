@@ -8,6 +8,7 @@ from utils import (
 )
 import lxml
 import requests
+import sys
 
 
 headers = {
@@ -71,8 +72,6 @@ class Query:
 
 def menu():
 
-    print("Welcome to the CGVD28 to CGVD2013 Conversion Tool".center(59, "="))
-
     print(
         '''\nAre you converting: 
     1. From elevation (CGVD28) to  elevation (CGVD2013)          -> Enter "1"
@@ -105,6 +104,7 @@ def menu():
         if int(conv_direction) == 3:
             verb = "output"
             c_model = "CGVD28_to_CGVD2013"
+
 
         else:
             hmode = True
@@ -185,4 +185,13 @@ def getHeight(query):
 
 
 if __name__ == "__main__":
-    menu()
+    run = True
+    print("Welcome to the CGVD28 to CGVD2013 Conversion Tool".center(59, "="))
+    while run:
+        menu()
+        print('''\nIf you would like to convert another point press enter. If you would like to quit submit "quit"''')
+        is_quit = str(input("Input: "))
+        if is_quit == 'quit':
+            sys.exit()
+        
+
