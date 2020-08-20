@@ -1,6 +1,4 @@
 from bs4 import BeautifulSoup
-import lxml
-import requests
 from dataclasses import dataclass
 from utils import (
     zoneValidation, 
@@ -8,6 +6,8 @@ from utils import (
     numericValidation, 
     get_vertical_Datum,
 )
+import lxml
+import requests
 
 
 headers = {
@@ -80,7 +80,7 @@ def menu():
     3. From an Ellipsoidal Elevation to an Orthometric Elevation -> Enter "3"
     4. From an Orthometric Elevation to an Ellipsoidal Elevation -> Enter "4"'''
     )
-    conv_direction = choiceValidation(["1", "2", "3", "4"], "Conversion Direction: ")
+    conv_direction = choiceValidation(["1", "2", "3", "4"], "\nConversion Direction: ")
 
     conversion = False
     hmode = False
@@ -115,8 +115,9 @@ def menu():
         model = datum
 
     print(
-        '''\nPlease select your location system.\n1. Latitude/Longitude -> Enter "LL"
-2. Universal Transverse Mercator (UTM) -> Enter "UTM"'''
+        '''\nPlease select your location system.
+    1. Latitude/Longitude                  -> Enter "LL"
+    2. Universal Transverse Mercator (UTM) -> Enter "UTM"'''
     )
     locSys = choiceValidation(["LL", "UTM"], "Location System: ")
 

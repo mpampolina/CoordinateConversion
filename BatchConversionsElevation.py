@@ -6,7 +6,6 @@ from utils import (
     get_path, 
     choiceValidation, 
     get_vertical_Datum,
-
 )
 import os
 import time
