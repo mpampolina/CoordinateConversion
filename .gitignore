@@ -11,3 +11,4 @@
 *.png
 chromedriver.exe
 ElevationContour.mat
+/premerge

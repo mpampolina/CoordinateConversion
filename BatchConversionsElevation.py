@@ -62,7 +62,7 @@ def batchProcessing(convert, value, path):
     options = webdriver.ChromeOptions()
     options.add_argument("--ignore-certificate-errors-spki-list")
     options.add_argument("--ignore-ssl-errors")
-    browser = webdriver.Chrome(chrome_options=options)
+    browser = webdriver.Chrome(options=options)
     browser.implicitly_wait(15)
 
     browser.get(url)
@@ -94,6 +94,7 @@ def batchProcessing(convert, value, path):
     time.sleep(5)  # wait 5 seconds for the download to complete
 
     browser.quit()
+
 
 if __name__ == "__main__":
     menu()
