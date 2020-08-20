@@ -2,6 +2,13 @@ from bs4 import BeautifulSoup
 import lxml
 import requests
 from dataclasses import dataclass
+from utils import (
+    zoneValidation, 
+    choiceValidation,
+    numericValidation, 
+    get_vertical_Datum,
+)
+
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
@@ -67,10 +74,11 @@ def menu():
     print("Welcome to the CGVD28 to CGVD2013 Conversion Tool".center(59, "="))
 
     print(
-        '''Are you converting: \n1. From elevation (CGVD28) to  elevation (CGVD2013) -> Enter "1"
-2. From elevation (CGVD2013) to elevation (CGVD28) -> Enter "2"
-3. From an Ellipsoidal Elevation to an Orthometric Elevation -> Enter "3"
-4. From an Orthometric Elevation to an Ellipsoidal Elevation -> Enter "4"'''
+        '''\nAre you converting: 
+    1. From elevation (CGVD28) to  elevation (CGVD2013)          -> Enter "1"
+    2. From elevation (CGVD2013) to elevation (CGVD28)           -> Enter "2"
+    3. From an Ellipsoidal Elevation to an Orthometric Elevation -> Enter "3"
+    4. From an Orthometric Elevation to an Ellipsoidal Elevation -> Enter "4"'''
     )
     conv_direction = choiceValidation(["1", "2", "3", "4"], "Conversion Direction: ")
 
@@ -103,7 +111,7 @@ def menu():
             verb = "input"
             c_model = "CGVD28_to_CGVD2013"
 
-        datum, epoch = getDatum(verb)
+        datum, epoch = get_vertical_Datum(verb)
         model = datum
 
     print(
@@ -142,49 +150,6 @@ def menu():
     query = Query(proj, datum, c_model, model, zone, x, y, z, conversion, hmode, epoch)
 
     getHeight(query)
-
-
-def choiceValidation(choiceList, inputMessage="Input: "):
-    while True:
-        choice = input(inputMessage).upper().replace(" ", "")
-        if choice not in choiceList:
-            print("\nInvalid Option. Please Try again.")
-        else:
-            break
-    return choice
-
-
-def numericValidation(inputMessage="Input: "):
-    while True:
-        value = input(inputMessage)
-        try:
-            float(value)
-            break
-        except ValueError:
-            print("Invalid Input. Input is not numeric.")
-            continue
-    return value
-
-
-def zoneValidation(inputMessage="Zone: "):
-    while True:
-        value = input(inputMessage)
-        if 1 <= int(float(value)) <= 60:
-            break
-        else:
-            print("Invalid Zone. Please try again.")
-            continue
-    return value
-
-
-def getDatum(verb):
-    epoch = False
-    print(f'\nSpecify your {verb} orthometric datum: "CGVD28" or "CGVD2013"')
-    datum = choiceValidation(["CGVD28", "CGVD2013"], "\nDatum: ")
-    if datum == "CGVD2013":
-        epoch = True
-    return datum, epoch
-
 
 # he = H28 height in m
 # ho = H2013 height in m

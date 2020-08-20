@@ -6,13 +6,20 @@ from CoordinateConversion import (
     distanceBetweenUTM,
     Datums,
 )
-from dxf_to_csv import dxfParser
-from kml_to_csv import kmlParser
+from utils import (
+    dxfParser,
+    kmlParser,
+    utm_prompts,
+    get_path,
+    get_ConversionDirection,
+    get_datum,
+    get_outputfilename,
+)
 import csv
 import os
 import sys
 
-
+# Main menu for the batch conversions
 def mainMenu():
 
     # While there is no valid file or path continuously ask until it is valid or user quits
@@ -52,6 +59,7 @@ def mainMenu():
         elif conv_dir == "dxf2ll":
             Zone, zoneQuadrant, isNorth = utm_prompts()
             batchDXF_utm2LL(path, datum_input, Zone, zoneQuadrant, isNorth)
+            conv_complete = True
 
         else:
             print(
@@ -66,73 +74,6 @@ def mainMenu():
     print(
         f"Conversion Complete. Please check [{scriptDirectory}] for the converted file."
     )
-
-
-def utm_prompts():
-    print("\nWhat zone are the sets of UTM coordinates in: \n")
-    Zone = int(input("Input: "))
-
-    print("\nWhat zone quadrant are the sets of UTM coordinates in? (ex. U)\n")
-    zoneQuadrant = str(input("Input: "))
-
-    print('\nAre the sets of UTM coordinates in the northern or southern hemisphere:')
-    print('Enter True for Northern and False for Southern\n')
-    isNorth = bool(input('Input: '))
-
-    return Zone, zoneQuadrant, isNorth
-
-
-# Method returns the path or file path both of which are suitable
-def get_path():
-    while True:
-        print(
-        "\nPlease enter one of the following options to complete your coordinate conversion:"
-        )
-        print("\nOption-1: Please enter the path for your .csv file.")
-        print(
-        """Option-2: Ensure that the selected csv file is located in the same directory as this script and
-          please enter the path for your .csv file (example: MyCoordinates.csv).\n"""
-        )
-
-        path = str(input("Input: "))
-      
-        if path == "quit":
-            sys.exit()
-        elif not os.path.isfile(path):
-            print(
-                '\nThis path or file does not exist. Please try again or enter "quit" to terminate the system.'
-            )
-        else:
-            break
-
-    return path
-
-
-# Method returns the conversion direction as a string
-def get_ConversionDirection():
-    print(
-        """\nSelect the conversion direction:\n1. Lat/lon to UTM input -> LL2utm\n2. UTM to lat/lon input -> utm2LL
-3. Lat/Lon (DMS) to UTM input -> LLdms2utm\n4. KML (lat/lon) to UTM input -> kml2utm
-5. DXF (utm) to lat/lon input -> dxf2LL"""
-    )
-    conv_dir = str(input("Input: ")).lower()
-    return conv_dir
-
-
-# Gets datum
-def get_datum():
-    print(
-        "\nWhat datum you would like to reference the conversion with (i.e. NAD 83, WGS 84 etc.):\n"
-    )
-    datum = input("Input: ").lower().replace(" ", "")
-    return datum
-
-
-# Get the output filename as a strign
-def get_outputfilename():
-    print("\nWhat would you like to name your output file? (ex. myfile)")
-    outputFilename = str(input("\nInput: ")) + '.csv' # Create output file name
-    return outputFilename
 
 
 # Method converts a CSV file of latitude and longitude coordinates to UTM
