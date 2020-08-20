@@ -1,9 +1,9 @@
+from utils import get_path
 import pandas as pd
 import matplotlib.pyplot as plt
 import sys
 import os
 
-from BatchConversions import get_path
 
 
 df = pd.read_csv(get_path())

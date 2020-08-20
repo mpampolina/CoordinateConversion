@@ -1,5 +1,5 @@
 from CoordinateConversion import LL2utm, utm2LL, getLLfromDMS
-from BatchConversions import get_datum, get_ConversionDirection
+from utils import get_datum, get_ConversionDirection
 import sys
 
 
