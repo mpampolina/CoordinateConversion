@@ -105,18 +105,21 @@ def batch_LL2utm(path, datum_in):
                 lat_in1 = float(coords[0])
                 lon_in1 = float(coords[1])
                 elevation = float(coords[2])
-                east_out, north_out, zone, zone_quad = LL2utm(
+                east_out1, north_out1, zone, zone_quad = LL2utm(
                     lat_in1, lon_in1, datum=datum_in
                 )
-
+                
                 prevIndex = lineCount - 2  # index of previous coord
                 if prevIndex >= 0:  # will start on 2nd coord
                     lat_in0 = float(readerList[prevIndex][0])  # previous latitude
                     lon_in0 = float(readerList[prevIndex][1])  # previous longitude
-                    distance += distanceBetweenLL(lat_in0, lon_in0, lat_in1, lon_in1)
+                    
+                    east_out0, north_out0, zone, zone_quad = LL2utm(
+                    lat_in0, lon_in0, datum=datum_in)
+                    distance += distanceBetweenUTM(east_out0, north_out0, east_out1, north_out1)
 
                 writer.writerow(
-                    [lat_in1, lon_in1, east_out, north_out, zone, zone_quad, elevation, distance]
+                    [lat_in1, lon_in1, east_out1, north_out1, zone, zone_quad, elevation, distance]
                 )
 
     print(f"\nConverted {lineCount} coordinates")
@@ -160,7 +163,7 @@ def batch_dms2utm(path, datum_in):
                 )
                 elevation = float(coords[6])
                 # Convert Lat/Lon to utm
-                east_out, north_out, zone, zone_quad = LL2utm(
+                east_out1, north_out1, zone, zone_quad = LL2utm(
                     lat_in1, lon_in1, datum=datum_in
                 )
                 # Calculate cumulative distance
@@ -174,11 +177,14 @@ def batch_dms2utm(path, datum_in):
                         float(readerList[prevIndex][4]),
                         float(readerList[prevIndex][5]),
                     )
-                    distance += distanceBetweenLL(lat_in0, lon_in0, lat_in1, lon_in1)
+                    east_out0, north_out0, zone, zone_quad = LL2utm(
+                    lat_in0, lon_in0, datum=datum_in
+                    )
+                    distance += distanceBetweenUTM(east_out0, north_out0, east_out1, north_out1)
                 
                 # Write to output csv file
                 writer.writerow(
-                    [lat_in1, lon_in1, east_out, north_out, zone, zone_quad, elevation, distance]
+                    [lat_in1, lon_in1, east_out1, north_out1, zone, zone_quad, elevation, distance]
                 )
    
     print(f"\nConverted {lineCount} coordinates")
@@ -261,7 +267,7 @@ def batchKML_LL2utm(path, datum_in):
             lat_in1 = float(coords['Latitude'])
             lon_in1 = float(coords['Longitude'])
             elevation = float(coords['Elevation (m)'])
-            east_out, north_out, zone, zone_quad = LL2utm(
+            east_out1, north_out1, zone, zone_quad = LL2utm(
                 lat_in1, lon_in1, datum=datum_in
             )
 
@@ -269,10 +275,13 @@ def batchKML_LL2utm(path, datum_in):
             if prevIndex >= 0:  # will start on 2nd coord
                 lat_in0 = float(KML_dataStructure[prevIndex]['Latitude'])  # previous latitude
                 lon_in0 = float(KML_dataStructure[prevIndex]['Longitude'])  # previous longitude
-                distance += distanceBetweenLL(lat_in0, lon_in0, lat_in1, lon_in1)
+                east_out0, north_out0, zone, zone_quad = LL2utm(
+                    lat_in0, lon_in0, datum=datum_in)
+
+                distance += distanceBetweenUTM(east_out0, north_out0, east_out1, north_out1)
 
             writer.writerow(
-                [lat_in1, lon_in1, east_out, north_out, zone, zone_quad, elevation, distance]
+                [lat_in1, lon_in1, east_out1, north_out1, zone, zone_quad, elevation, distance]
             )
 
     print(f"\nConverted {lineCount} coordinates")
