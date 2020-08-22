@@ -1,11 +1,11 @@
-# Batch Coordiante Conversions
-Coordinate conversion tools for drone survey data written in Python3. The files here can be used to convert either single coordinates (CoordinateConversion.py) or a set of coordinates in either latitude/longitude (lat/lon) or degrees or degree, minutes, seconds to UTM (universal transverse mercator) with reference to numerous different datums.
+# Coordinate Conversions
+Coordinate conversion tools for processing and modelling drone survey data written in Python3. Coordinates can be converted with reference to numerous different datums between the formats of latitude/longitude (decimal degrees), latitude/longitude (DMS notation), and  UTM (universal transverse mercator). This tookit can handle single coordinate conversions using SingularConversion.py and SingularConversionElevation.py or a set of coordinates using BatchConversion.py and BatchConversionsElevation.py.
 
 ### Avaliable Datums
 ------
 WGS 84, NAD83, GRS 80, WGS 72, Australian 1965, Krasovsky 1940, North American 1927, International 1924, Hayford 1909, Clarke 1880, Clarke 1866, Airy 1830, Bessel 1841, Everest 1830
 
-### Input Files
+### Input Files - BatchConversion.py
 ------
 Note that if you're using the KML or DXF to CSV scripts on your original polyline all the input files will be accordingly formatted for further use in the batchConvrsion.py
 All input files must be .csv format. The five options for file input are as follows:
@@ -18,7 +18,7 @@ All input files must be .csv format. The five options for file input are as foll
 
 **The first set of coordinates should appear on the 2nd row (the system ignores column headers).**
 
-### Available Conversions
+### Available Conversions - BatchConversion.py
 ------
 Currently, there are three available conversion directions:
 
