@@ -269,7 +269,7 @@ def distanceBetweenLL(lat1, lon1, lat2, lon2):
 
     a = (sin(DeltaSig / 2) ** 2) + cos(Sig1) * cos(Sig2) * (sin(DeltaLamb / 2) ** 2)
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
-    d = R * c *1000 # Return distance in metres
+    d = R * c * 1000    # Return distance in metres
 
     return d
 
@@ -281,7 +281,7 @@ def distanceBetweenUTM(easting1, northing1, easting2, northing2):
     DeltaX = easting2 - easting1
     DeltaY = northing2 - northing1
 
-    d = sqrt((DeltaX ** 2) + (DeltaY ** 2)) # Return istance in metres
+    d = sqrt((DeltaX ** 2) + (DeltaY ** 2))     # Return distance in metres
 
     return d
 
