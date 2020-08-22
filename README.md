@@ -1,4 +1,4 @@
-# batchConversion.py
+# Batch Coordiante Conversions
 Coordinate conversion tools for drone survey data written in Python3. The files here can be used to convert either single coordinates (CoordinateConversion.py) or a set of coordinates in either latitude/longitude (lat/lon) or degrees or degree, minutes, seconds to UTM (universal transverse mercator) with reference to numerous different datums.
 
 ### Avaliable Datums
