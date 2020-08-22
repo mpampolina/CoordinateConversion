@@ -1,11 +1,16 @@
-# Batch Coordiante Conversions
-Coordinate conversion tools for drone survey data written in Python3. The files here can be used to convert either single coordinates (CoordinateConversion.py) or a set of coordinates in either latitude/longitude (lat/lon) or degrees or degree, minutes, seconds to UTM (universal transverse mercator) with reference to numerous different datums.
+# Coordinate Conversions
+Coordinate conversion tools for processing and modelling drone survey data written in Python3. Coordinates can be converted with reference to numerous different datums between the formats of latitude/longitude (decimal degrees), latitude/longitude (DMS notation), and  UTM (universal transverse mercator). This tookit can handle single coordinate conversions using SingularConversion.py and SingularConversionElevation.py or a set of coordinates using BatchConversion.py and BatchConversionsElevation.py.
+
+### Workflow
+------
+![CoordinateConversionMap](../media/CoordinateConversionMap.png?raw=true)
+
 
 ### Avaliable Datums
 ------
 WGS 84, NAD83, GRS 80, WGS 72, Australian 1965, Krasovsky 1940, North American 1927, International 1924, Hayford 1909, Clarke 1880, Clarke 1866, Airy 1830, Bessel 1841, Everest 1830
 
-### Input Files
+### Input Files - BatchConversion.py
 ------
 Note that if you're using the KML or DXF to CSV scripts on your original polyline all the input files will be accordingly formatted for further use in the batchConvrsion.py
 All input files must be .csv format. The five options for file input are as follows:
@@ -18,7 +23,7 @@ All input files must be .csv format. The five options for file input are as foll
 
 **The first set of coordinates should appear on the 2nd row (the system ignores column headers).**
 
-### Available Conversions
+### Available Conversions - BatchConversion.py
 ------
 Currently, there are three available conversion directions:
 
@@ -32,10 +37,10 @@ To execute this you must input a Lat/Lon(deg,min,sec) file. The necessary format
 To execute this you need to input a UTM file. The necessary format is noted in “Input Files Section 3”. Here you will need the file path, zone, either the zone quadrant or the hemisphere of your coordinates, and the datum used. The conversion will produce your output file in the same directory as the batchConversion.py file.
 
 ### KML to complete output:
-To execute this you need an input .kml file. The resulting output will inlcude the latitude/longitude; the UTM easting, nrothing and zones; the elevation; and the cumulative distance. The ouptut file will containt all necessary data to execute the BatchConversionsElevation.py.
+To execute this you need an input .kml file. The resulting output will inlcude the latitude/longitude; the UTM easting, nrothing and zones; the elevation; and the cumulative distance. The ouptut file will contain all necessary data to execute the BatchConversionsElevation.py.
 
 ### DXF to complete output:
-To execute this you need an input .dxf file. The resulting output will inlcude the latitude/longitude; the UTM easting, nrothing and zones; the elevation; and the cumulative distance. The ouptut file will containt all necessary data to execute the BatchConversionsElevation.py.
+To execute this you need an input .dxf file. The resulting output will inlcude the latitude/longitude; the UTM easting, nrothing and zones; the elevation; and the cumulative distance. The ouptut file will contain all necessary data to execute the BatchConversionsElevation.py.
 
 ### BatchConversionElevation.py
 This script is used to convert between ellipsoidal and orthometric heights as well as between the CGVD28 and CGVD2013 datums. Using one of the output files from the batchConversion.py script you use these as inputs and it will upload it to  https://webapp.geod.nrcan.gc.ca/geod/tools-outils/gpsh.php and automatically download the webapp's output file as a csv with the input data as well as the new transformed heights (common conversion direction will be "3").
