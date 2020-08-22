@@ -1,5 +1,5 @@
 from math import sqrt, sin, cos, tan, atan, cosh, sinh, asinh, atanh, atan2, floor, degrees, radians
-from KruegerSeries import getAlphaSeries, getBetaSeries
+from utils import getAlphaSeries, getBetaSeries
 
 # CONSTANTS
 k0 = 0.9996             # scale on central meridian
