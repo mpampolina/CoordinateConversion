@@ -9,6 +9,7 @@ import sys
 utmRegex = re.compile(r'''(AcDbPoint\n\s10\n(\d+\.\d+)\n\s20\n(\d+\.\d+)\n\s30\n(\d+\.\d+))
 ''', re.VERBOSE)
 
+
 # Creates strucutre for the dxf to be converted
 def dxfParser(Zone, Path):
 
@@ -31,6 +32,7 @@ def process_coordinate_string(string):
     # take the coordinate string from the KML file, and break it up into [Lat,Lon,Lat,Lon...] for a CSV row
     comma_split = string.split(',')
     return {'Latitude': comma_split[1], 'Longitude': comma_split[0], 'Elevation (m)': comma_split[2]}
+
 
 # Parse .kml file creating structure to be converted (csv struct lat,lon,elevation)
 def kmlParser(Path):
@@ -92,7 +94,7 @@ def get_ConversionDirection():
     4. KML (lat/lon) to UTM input   -> kml2utm
     5. DXF (utm) to lat/lon input   -> dxf2LL"""
     )
-    conv_dir = str(input("\nInput: ")).lower().replace(" ","")
+    conv_dir = str(input("\nInput: ")).lower().replace(" ", "")
     return conv_dir
 
 
@@ -114,7 +116,7 @@ def utm_prompts():
 # Get the output filename as a strign
 def get_outputfilename():
     print("\nWhat would you like to name your output file? (ex. myfile)")
-    outputFilename = str(input("\nInput: ")) + '.csv' # Create output file name
+    outputFilename = input("\nInput: ").split('.')[0] + '.csv'   # generate output file name as csv regardless of ext
     return outputFilename
 
 

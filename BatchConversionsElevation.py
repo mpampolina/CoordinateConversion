@@ -9,7 +9,6 @@ from utils import (
 )
 import os
 import time
-import sys
 
 
 url = "https://webapp.geod.nrcan.gc.ca/geod/tools-outils/gpsh.php"
@@ -19,6 +18,7 @@ Conversion_XP = '//*[@id="batchconversionModel"]'
 ChooseFile_XP = '//*[@id="file"]'
 SendFile_XP = '//*[@id="batchgpshform"]/div[4]/input'
 VerticalDatum_XP = '//*[@id="batchdestdatum"]'
+
 
 # Main menu method
 def menu():
