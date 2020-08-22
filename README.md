@@ -1,6 +1,11 @@
 # Coordinate Conversions
 Coordinate conversion tools for processing and modelling drone survey data written in Python3. Coordinates can be converted with reference to numerous different datums between the formats of latitude/longitude (decimal degrees), latitude/longitude (DMS notation), and  UTM (universal transverse mercator). This tookit can handle single coordinate conversions using SingularConversion.py and SingularConversionElevation.py or a set of coordinates using BatchConversion.py and BatchConversionsElevation.py.
 
+### Workflow
+------
+![CoordinateConversionMap](../media/CoordinateConversionMap.png?raw=true)
+
+
 ### Avaliable Datums
 ------
 WGS 84, NAD83, GRS 80, WGS 72, Australian 1965, Krasovsky 1940, North American 1927, International 1924, Hayford 1909, Clarke 1880, Clarke 1866, Airy 1830, Bessel 1841, Everest 1830
