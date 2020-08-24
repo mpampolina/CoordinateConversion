@@ -12,7 +12,7 @@ WGS 84, NAD83, GRS 80, WGS 72, Australian 1965, Krasovsky 1940, North American 1
 
 ### Input Files - BatchConversion.py
 ------
-All input files must be .csv format. The five options for file input are as follows:
+All input files must be .csv, .kml, or .dxf formats. The five options for file input are as follows:
 1. Latitude (decimal degrees), Longitude (decimal degrees), Elevation (metres)  must occupy the first three columns of your csv file **in that order**.
 
 Latitude (decimal degrees) | Longitude (decimal degrees) | Elevation (metres)
