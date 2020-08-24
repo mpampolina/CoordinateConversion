@@ -15,8 +15,23 @@ WGS 84, NAD83, GRS 80, WGS 72, Australian 1965, Krasovsky 1940, North American 1
 Note that if you're using the KML or DXF to CSV scripts on your original polyline all the input files will be accordingly formatted for further use in the batchConvrsion.py
 All input files must be .csv format. The five options for file input are as follows:
 1. Lat, Lon, Elevation (decimal degrees) must occupy the first two columns of your csv file **in that order**.
+
+Latitude (decimal degrees) | Longitude (decimal degrees) | Elevation (metres)
+--- | --- | ---
+50.88610427 | -121.4797261 | 574.7047903
+
 2. Lat(d,m,s),Lon(d,m,s), Elevation must occupy the first six columns of your csv file. The order for this must be latitude (deg, min, sec) in cols 1,2,3 respectively while longitude follows as (deg, min, sec) in cols 4, 5, and 6. Entries must be **in that order**.
+
+Latitude (D) | Latitude (M) | Latitude (S) | Longitude (D) | Longitude (M) | Longitude (S) | Elevation (metres)
+--- | --- | --- | --- | --- | --- | --- |
+50 | 53 | 9.975362137 | -121 | 28 | 47.01385705 | 574.7047903
+
 3. UTM (easting, northing, zone, elevation) must occupy the first two columns of your csv file **in that order**.
+
+Easting (metres) | Northing (metres) | Zone | Elevation (metres)
+--- | --- | --- | --- |
+606935.4236 | 5638260.254 | Zone | 574.7047903
+
 4. KML just must be formed with a valid set of points.
 5. DXF just must be formed with a valid set of points.
 
