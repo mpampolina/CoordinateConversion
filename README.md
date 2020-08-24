@@ -12,15 +12,14 @@ WGS 84, NAD83, GRS 80, WGS 72, Australian 1965, Krasovsky 1940, North American 1
 
 ### Input Files - BatchConversion.py
 ------
-Note that if you're using the KML or DXF to CSV scripts on your original polyline all the input files will be accordingly formatted for further use in the batchConvrsion.py
 All input files must be .csv format. The five options for file input are as follows:
-1. Lat, Lon, Elevation (decimal degrees) must occupy the first two columns of your csv file **in that order**.
+1. Latitude (decimal degrees), Longitude (decimal degrees), Elevation (metres)  must occupy the first three columns of your csv file **in that order**.
 
 Latitude (decimal degrees) | Longitude (decimal degrees) | Elevation (metres)
 --- | --- | ---
 50.88610427 | -121.4797261 | 574.7047903
 
-2. Lat(d,m,s),Lon(d,m,s), Elevation must occupy the first six columns of your csv file. The order for this must be latitude (deg, min, sec) in cols 1,2,3 respectively while longitude follows as (deg, min, sec) in cols 4, 5, and 6. Entries must be **in that order**.
+2. Latitude (degrees, minutes, seconds), Longitude(degrees, minutes, seconds), Elevation (metres) must occupy the first seven columns of your csv file. The order for this must be latitude in columns 1,2,3 respectively while longitude follows in columns 4, 5, and 6. Entries must be **in that order**.
 
 Latitude (D) | Latitude (M) | Latitude (S) | Longitude (D) | Longitude (M) | Longitude (S) | Elevation (metres)
 --- | --- | --- | --- | --- | --- | --- |
@@ -30,11 +29,12 @@ Latitude (D) | Latitude (M) | Latitude (S) | Longitude (D) | Longitude (M) | Lon
 
 Easting (metres) | Northing (metres) | Zone | Elevation (metres)
 --- | --- | --- | --- |
-606935.4236 | 5638260.254 | Zone | 574.7047903
+606935.4236 | 5638260.254 | 10 | 574.7047903
 
 4. KML just must be formed with a valid set of points.
 5. DXF just must be formed with a valid set of points.
 
+**Note that if you're using the KML or DXF to CSV scripts on your original polyline all the input files will be accordingly formatted for further use in the batchConversion.py**
 
 **The first set of coordinates should appear on the 2nd row (the system ignores column headers).**
 
@@ -43,19 +43,19 @@ Easting (metres) | Northing (metres) | Zone | Elevation (metres)
 Currently, there are three available conversion directions:
 
 ### Latitude/Longitude(decimal degrees) to UTM:
-To execute this you must input a Lat/Lon(decimal degrees) file. The necessary format is noted in “Input Files Section 1”. With this you will be asked for the path and datum. The conversion will produce your output file in the same directory as the batchConversion.py file.
+To execute this you must input a latiude/longitude(decimal degrees) file. The necessary format is noted in “Input Files Section 1”. With this you will be asked for the path and datum. The conversion will produce your output file in the same directory as the batchConversion.py file.
 
 ### Latitude/Longitude(degrees, minutes, seconds) to UTM:
-To execute this you must input a Lat/Lon(deg,min,sec) file. The necessary format is noted in “Input Files Section 2”. With this you will be asked for the file path and datum used. The conversion will produce your output file in the same directory as the batchConversion.py file.
+To execute this you must input a latiude/longitude(deg,min,sec) file. The necessary format is noted in “Input Files Section 2”. With this you will be asked for the file path and datum used. The conversion will produce your output file in the same directory as the batchConversion.py file.
 
 ### UTM to Latitude/Longitude(decimal degrees):
 To execute this you need to input a UTM file. The necessary format is noted in “Input Files Section 3”. Here you will need the file path, zone, either the zone quadrant or the hemisphere of your coordinates, and the datum used. The conversion will produce your output file in the same directory as the batchConversion.py file.
 
 ### KML to complete output:
-To execute this you need an input .kml file. The resulting output will inlcude the latitude/longitude; the UTM easting, nrothing and zones; the elevation; and the cumulative distance. The ouptut file will contain all necessary data to execute the BatchConversionsElevation.py.
+To execute this you need an input .kml file. The resulting output will include the latitude/longitude; the UTM easting, northing and zones; the elevation; and the cumulative distance. The output file will contain all necessary data to execute the BatchConversionsElevation.py.
 
 ### DXF to complete output:
-To execute this you need an input .dxf file. The resulting output will inlcude the latitude/longitude; the UTM easting, nrothing and zones; the elevation; and the cumulative distance. The ouptut file will contain all necessary data to execute the BatchConversionsElevation.py.
+To execute this you need an input .dxf file. The resulting output will inlcude the latitude/longitude; the UTM easting, northing and zones; the elevation; and the cumulative distance. The output file will contain all necessary data to execute the BatchConversionsElevation.py.
 
 ### BatchConversionElevation.py
 This script is used to convert between ellipsoidal and orthometric heights as well as between the CGVD28 and CGVD2013 datums. Using one of the output files from the batchConversion.py script you use these as inputs and it will upload it to  https://webapp.geod.nrcan.gc.ca/geod/tools-outils/gpsh.php and automatically download the webapp's output file as a csv with the input data as well as the new transformed heights (common conversion direction will be "3").
